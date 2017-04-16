@@ -78,13 +78,13 @@ CREATE TABLE access_rights (
     PRIMARY KEY (group_id, user_id)
 );
 
-CREATE TABLE group_invitations ( -- заЯвки от пользователей на вступление в группы
+CREATE TABLE group_invitations ( -- Р·Р°СЏРІРєРё РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РЅР° РІСЃС‚СѓРїР»РµРЅРёРµ РІ РіСЂСѓРїРїС‹
     group_id INTEGER REFERENCES groups.group_id,
     user_id INTEGER REFERENCES users.user_id
     PRIMARY KEY (group_id, user_id)
 );
 
-CREATE TABLE user_invitations ( -- приглашениЯ пользователЯм
+CREATE TABLE user_invitations ( -- РїСЂРёРіР»Р°С€РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј
     group_id INTEGER REFERENCES groups.group_id,
     user_id INTEGER REFERENCES users.user_id
     PRIMARY KEY (group_id, user_id)
