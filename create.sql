@@ -58,6 +58,14 @@ CREATE TABLE user_cards (
     PRIMARY KEY (user_id, card_id)
 );
 
+CREATE TABLE group_packs (
+    group_id INTEGER REFERENCES groups.group_id,
+    pack_id INTEGER REFERENCES packs.pack_id,
+    status INTEGER
+
+    PRIMARY KEY (group_id, pack_id)
+);
+
 CREATE TABLE editing_rights (
     group_id INTEGER REFERENCES groups.group_id,
     user_id INTEGER REFERENCES users.user_id
