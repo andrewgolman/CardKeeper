@@ -5,6 +5,7 @@ cursor = base.cursor()
 
 # Wrapped queries in alphabetic order
 
+
 def push():
     cursor.execute("COMMIT;")
 
@@ -14,6 +15,15 @@ def add_user(user):
                 VALUES ('{}', '{}', '{}', '{}', '{}', '{}', current_date);""".format(*user)
     cursor.execute(query)
     push()
+
+
+def active_packs(user_id):
+    query = """SELECT packs.pack_id, packs.name FROM user_packs, packs WHERE packs.pack_id = user_packs.pack_id
+                AND user_packs.status = 'Active' AND user_id = {} ORDER BY pack_id;""".format(user_id)
+    cursor.execute(query)
+    packs = cursor.fetchall()
+    return packs
+
 
 def if_registered(user):
     query = "SELECT * FROM users WHERE users.user_id = '{}';".format(user)
@@ -44,7 +54,3 @@ def new_pack(name, owner, privacy='public', status='active'):
     cursor.execute(query)
     push()
     return pack_id
-
-
-def display_active_packs(user_id):
-    query = ""
