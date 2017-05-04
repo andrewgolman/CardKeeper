@@ -3,8 +3,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 import queries
 import say
 import register
+import modes
 
-token = open("token", "r").read().strip()
+token = open("token", "r").read()
 
 
 def menu(bot, update):
@@ -18,8 +19,6 @@ def begin(bot, update):
     update.message.reply_text(say.choose_a_pack)
     queries.display_active_packs()
     menu(bot, update)
-
-
 
 
 def packs(bot, update):
@@ -62,19 +61,49 @@ def main():
         },
         fallbacks=[CommandHandler('cancel', register.cancel)]
     )
-    #
-    # exercise_handler = ConversationHandler(
-    #     entry_points=[CommandHandler('begin', modes.begin)],
+
+    exercise_handler = ConversationHandler(
+        entry_points=[CommandHandler('Begin', modes.begin)],
+        states={
+            modes.CHOOSE_PACK: [MessageHandler(Filters.text, modes.choose_pack)],
+            modes.CHOOSE_MODE: [MessageHandler(Filters.text, modes.choose_mode)],
+            modes.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, modes.start_review)],
+            modes.START_REVIEW: [MessageHandler(Filters.text, modes.choose_review_type)],
+            modes.START_LEARN: [MessageHandler(Filters.text, modes.start_learn)],
+            modes.REVIEW: [CommandHandler('Change_language', modes.change_language),
+                           CommandHandler('Stats', modes.review.stats),
+                           MessageHandler(Filters.text, modes.review.ask)
+                           ],
+            modes.LEARN: [CommandHandler('Change_language', modes.change_language),
+                          CommandHandler('Show_all', modes.learn.show_all),
+                          CommandHandler('Shuffle', modes.learn.shuffle),
+                          MessageHandler(Filters.text, modes.learn.ask)
+                          ],
+            modes.START_TRANSLATE: [MessageHandler(Filters.text, modes.translate.init)],
+            modes.LEARN: [CommandHandler('Change_language', modes.change_language),
+                          MessageHandler(Filters.text, modes.translate.ask)
+                          ],
+            # отсюда же вызывается транслейт
+            # набирать на клавиатуре не даем, как в ревью
+            modes.START_TEST: [MessageHandler(Filters.text, modes.test.start_test)],
+            #prints message and then calls init lang as review
+            modes.TEST: [CommandHandler('Change_language', modes.change_language),
+                           CommandHandler('Stats', modes.review.stats),
+                           MessageHandler(Filters.text, modes.review.ask_test)
+                           ]
+        },
+        fallbacks=[CommandHandler('End', modes.end)]
+    )
+
+    # group_handler = ConversationHandler(
+    #     entry_points=[CommandHandler('Groups', groups.begin)]
     #     states={
-    #         PACK_LIST: [MessageHandler(Filters.text, modes.choose_pack)],
-    #         MODE: [MessageHandler(Filters.text, modes.choose_mode)],
-    #         LANGUAGE: [MessageHandler(Filters.text, modes.choose_language)],
-    #         PROCESS_CARD: [MessageHandler(Filters.text, modes.general_goal)],
+    #
     #     }
     # )
-    #
 
     dp.add_handler(registration_handler)
+    dp.add_handler(exercise_handler)
 
     updater.start_polling()
     # updater.idle()
