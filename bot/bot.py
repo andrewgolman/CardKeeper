@@ -15,12 +15,6 @@ def menu(bot, update):
     update.message.reply_text(legend + '\n' + menu_opts)
 
 
-def begin(bot, update):
-    update.message.reply_text(say.choose_a_pack)
-    queries.display_active_packs()
-    menu(bot, update)
-
-
 def packs(bot, update):
     msg = "This part is coming up soon!"
     update.message.reply_text(msg)
@@ -44,9 +38,7 @@ def main():
 
     dp = updater.dispatcher
 
-    # dp.add_handler(CommandHandler("start", registration))
     dp.add_handler(CommandHandler("menu", menu))
-    dp.add_handler(CommandHandler("Begin", begin))
     dp.add_handler(CommandHandler("Packs", packs))
     dp.add_handler(CommandHandler("Groups", groups))
     dp.add_handler(CommandHandler("Settings", settings))
@@ -80,7 +72,7 @@ def main():
                           MessageHandler(Filters.text, modes.learn.ask)
                           ],
             modes.START_TRANSLATE: [MessageHandler(Filters.text, modes.translate.init)],
-            modes.LEARN: [CommandHandler('Change_language', modes.change_language),
+            modes.TRANSLATE: [CommandHandler('Change_language', modes.change_language),
                           MessageHandler(Filters.text, modes.translate.ask)
                           ],
             # отсюда же вызывается транслейт
