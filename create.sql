@@ -4,6 +4,7 @@ CREATE TYPE PRIVACY_TYPE AS ENUM ('private', 'protected',  'public');
 CREATE TYPE CARD_STATUS_TYPE AS ENUM ('Active', 'Reserved', 'Not ready', 'Deprecated', 'Learned');
 CREATE TYPE RIGHTS_TYPE AS ENUM ('admin', 'user');
 CREATE TYPE INVITATION_TYPE AS ENUM ('from a group', 'from a user');
+CREATE TYPE CARD_TYPE AS ENUM ('Short', 'Construction', 'Sentence');
 
 CREATE TABLE users (
     user_id 			        INTEGER 		PRIMARY KEY,
@@ -34,7 +35,8 @@ CREATE TABLE cards (
     pack_id 	INTEGER 	REFERENCES packs (pack_id),
     front 		TEXT 		NOT NULL,
     back 		  TEXT,
-    comment 	TEXT
+    comment 	TEXT,
+    type      CARD_TYPE
 );
 
 CREATE TABLE user_groups (
