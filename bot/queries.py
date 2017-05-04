@@ -21,8 +21,7 @@ def active_packs(user_id):
     query = """SELECT packs.pack_id, packs.name FROM user_packs, packs WHERE packs.pack_id = user_packs.pack_id
                 AND user_packs.status = 'Active' AND user_id = {} ORDER BY pack_id;""".format(user_id)
     cursor.execute(query)
-    packs = cursor.fetchall()
-    return packs
+    return cursor.fetchall()
 
 
 def if_registered(user):
@@ -35,6 +34,12 @@ def if_username_taken(username):
     query = "SELECT * FROM users WHERE users.name = '{}';".format(username)
     cursor.execute(query)
     return True if len(cursor.fetchall()) else False
+
+
+def cards_for_learning(user_id):
+    query = """SELECT cards.front, cards.back, cards.comment FROM user_cards, cards
+                WHERE user_cards.card_id = cards.card_id AND
+                user_id = {} AND cards.type = 'Short'""".format(user_id)
 
 
 def new_card(front, back):
@@ -54,3 +59,28 @@ def new_pack(name, owner, privacy='public', status='active'):
     cursor.execute(query)
     push()
     return pack_id
+
+
+def select_cards(user_id, pack_id):
+    query = """SELECT cards.front, cards.back, cards.comment FROM cards, user_cards
+                WHERE cards.card_id = user_cards.card_id AND user_cards.status = 'Active'
+                AND cards.pack_id = {} AND user_cards.user_id = {}""".format(user_id, pack_id)
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def update_card_data(user_id, card_id, answer):
+    query = """UPDATE user_cards SET times_reviewed = times_reviewed+1, correct_answers = correct_answers+{}
+                WHERE user_id = {} AND card_id = {}""".format(answer, user_id, card_id)
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def update_card_status(user_id, card_id, status):
+    query = """UPDATE user_cards SET status = '{}'
+                WHERE user_id = {} AND card_id = {}""".format(status, user_id, card_id)
+
+
+def update_pack_status(user_id, pack_id, status):
+    query = """UPDATE user_cards SET status = '{}'
+                WHERE user_id = {} AND card_id = {}""".format(status, user_id, pack_id)
