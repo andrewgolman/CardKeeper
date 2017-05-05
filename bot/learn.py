@@ -17,5 +17,3 @@ def show_all(bot, update):
 def shuffle(bot, update):
 
     return LEARN
-
-

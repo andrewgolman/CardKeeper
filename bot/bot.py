@@ -5,7 +5,7 @@ import say
 import register
 import modes
 
-token = open("token", "r").read()
+token = open("token", "r").read().strip()
 
 
 def menu(bot, update):

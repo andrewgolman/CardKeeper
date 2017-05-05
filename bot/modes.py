@@ -2,8 +2,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import queries
 import say
-import learn
-import review
+# import review
 
 CHOOSE_PACK, CHOOSE_MODE, CHOOSE_REVIEW_TYPE, START_REVIEW, START_LEARN, REVIEW, LEARN = tuple(range(7))
 
@@ -75,4 +74,3 @@ def show_cards(user_id, lang=0, answer=None):
     for i in enumerate(list):
         res = res + str(i[0]) + ". " + i[1] + "\n"
     return res
-
