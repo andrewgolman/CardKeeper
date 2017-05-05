@@ -4,7 +4,7 @@ import queries
 import say
 # import review
 
-CHOOSE_PACK, CHOOSE_MODE, CHOOSE_REVIEW_TYPE, START_REVIEW, START_LEARN, REVIEW, LEARN = tuple(range(7))
+CHOOSE_PACK, CHOOSE_MODE, CHOOSE_REVIEW_TYPE, START_REVIEW, START_LEARN, REVIEW, LEARN, CHANGE_LANGUAGE = tuple(range(8))
 
 selected_packs = {}
 selected_cards = {} # можно ли смотреть из внешних файлов

@@ -46,10 +46,10 @@ def main():
     registration_handler = ConversationHandler(
         entry_points=[CommandHandler('start', register.start)],
         states={
-            register.GENERAL_GOAL: [MessageHandler(Filters.text, register.general_goal)],
-            register.WEEKLY_GOAL: [MessageHandler(Filters.text, register.weekly_goal)],
-            register.NOTIFY_LEARN: [MessageHandler(Filters.text, register.notify_learn)],
-            register.NOTIFY_STATS: [MessageHandler(Filters.text, register.notify_stats)],
+            register.GENERAL_GOAL: [MessageHandler(Filters.text, register.GENERAL_GOAL)],
+            register.WEEKLY_GOAL: [MessageHandler(Filters.text, register.WEEKLY_GOAL)],
+            register.NOTIFY_LEARN: [MessageHandler(Filters.text, register.NOTIFY_LEARN)],
+            register.NOTIFY_STATS: [MessageHandler(Filters.text, register.NOTIFY_STATS)],
         },
         fallbacks=[CommandHandler('cancel', register.cancel)]
     )
@@ -57,12 +57,12 @@ def main():
     exercise_handler = ConversationHandler(
         entry_points=[CommandHandler('Begin', modes.begin)],
         states={
-            modes.CHOOSE_PACK: [MessageHandler(Filters.text, modes.choose_pack)],
-            modes.CHOOSE_MODE: [MessageHandler(Filters.text, modes.choose_mode)],
-            modes.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, modes.start_review)],
-            modes.START_REVIEW: [MessageHandler(Filters.text, modes.choose_review_type)],
-            modes.START_LEARN: [MessageHandler(Filters.text, modes.start_learn)],
-            modes.REVIEW: [CommandHandler('Change_language', modes.change_language),
+            modes.CHOOSE_PACK: [MessageHandler(Filters.text, modes.CHOOSE_PACK)],
+            modes.CHOOSE_MODE: [MessageHandler(Filters.text, modes.CHOOSE_MODE)],
+            modes.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, modes.START_REVIEW)],
+            modes.START_REVIEW: [MessageHandler(Filters.text, modes.CHOOSE_REVIEW_TYPE)],
+            modes.START_LEARN: [MessageHandler(Filters.text, modes.START_LEARN)],
+            modes.REVIEW: [CommandHandler('Change_language', modes.CHANGE_LANGUAGE),
                            CommandHandler('Stats', modes.review.stats),
                            MessageHandler(Filters.text, modes.review.ask)
                            ],
