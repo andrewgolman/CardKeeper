@@ -52,6 +52,10 @@ def choose_review_type(bot, update):
     return START_REVIEW
 
 
+def start_learn(bot, update):
+    pass
+
+
 def start_review(bot, update):
     # просит выбрать язык
     return REVIEW
@@ -61,8 +65,10 @@ def review(bot, update):
     # принимает команды и достает карточку
     pass
 
+
 def learn_end():
     pass
+
 
 def end(bot, update):
     pass
