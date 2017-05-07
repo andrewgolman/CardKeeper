@@ -2,7 +2,9 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import queries
 import say
-from modes import LEARN
+
+START_LEARN, LEARN = (0, 1)
+
 
 def ask(bot, update):
 
