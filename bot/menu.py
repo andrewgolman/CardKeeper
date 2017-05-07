@@ -1,5 +1,6 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+import say
 
 
 def head_menu(bot, update):
@@ -13,16 +14,15 @@ def quit(bot, update):
     pass
 
 
-def cancel(bot, update):
-    pass
-
-
 def end(bot, update):
     pass
 
 
 def begin(bot, update):
-    pass
+    ways = ["/review", "/learn", "/test", "/practice"]
+    legend = say.begin_legend
+    opts = "\n".join(ways)
+    update.message.reply_text(legend + '\n' + opts)
 
 
 def cards(bot, update):
