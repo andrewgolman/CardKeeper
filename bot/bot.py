@@ -4,6 +4,12 @@ import queries
 import say
 import register
 import handlers
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 token = open("token", "r").read().strip()
 
