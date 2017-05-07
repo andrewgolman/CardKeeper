@@ -20,3 +20,7 @@ def send(update, text, markup=None):
         update.message.reply_text(text, reply_markup=ReplyKeyboardMarkup([markup], one_time_keyboard=True))
     else:
         update.message.reply_text(text)
+
+
+def user(update):
+    return update.message.from_user.id
