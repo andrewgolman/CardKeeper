@@ -28,8 +28,9 @@ review_ch = ConversationHandler(
             review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
             review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
             review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+            # commands through regexp
             review.ITERATE: [MessageHandler(Filters.text, review.review_ask)],
-            review.END: [MessageHandler(Filters.text, review.review_end)]
+            review.END: [MessageHandler(Filters.text, review.end)]
     },
     fallbacks=[CommandHandler("quit", menu.quit),
                CommandHandler("menu", menu.head_menu),
