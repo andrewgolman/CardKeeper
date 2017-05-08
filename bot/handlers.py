@@ -71,9 +71,10 @@ conversation_handlers = [
     ),
 
     ConversationHandler(
-        entry_points=[CommandHandler('new_pack', packs.create.choose_name)],
+        entry_points=[CommandHandler('new_pack', packs.create.start)],
         states={
-            packs.create.CHOOSE_NAME
+            packs.create.CHOOSE_NAME: [MessageHandler(Filters.text, packs.create.choose_name)],
+            packs.create.CHOOSE_PRIVACY: [MessageHandler(Filters.text, packs.create.choose_privacy)]
         },
         fallbacks=default_fallbacks
     )

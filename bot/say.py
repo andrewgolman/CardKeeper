@@ -6,6 +6,8 @@ choose_general_goal = "Choose a general goal for your learning. That will help m
 choose_learn_notifications = """"I can remind you to look through your cards if you are off for a while. Please,
     choose how often you wish to receive these notifications."""
 choose_mode = "Please, choose one of suggested modes. You can type /modes_help to find out more about them."
+choose_pack_name = "Choose name for a new pack"
+choose_pack_privacy = "Choose pack privacy level: private, protected or public"
 choose_stats_notifications = """I can also tell you how much you've learned to give you some extra motivation.
     Now you can choose a way to get this kind of messages."""
 choose_type_of_review = "Choose type of review. Type /review_help for help."

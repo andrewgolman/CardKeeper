@@ -42,19 +42,21 @@ def cards_for_learning(user_id):
 
 def new_card(front, back):
     query = "INSERT INTO cards (front, back) VALUES (%s, %s);"
-    cursor.execute(query,  (front, back))
+    cursor.execute(query, (front, back))
     base.commit()
 
 
 def new_pack(name, owner, privacy='public', status='active'):
-    query = "INSERT INTO packs (name, owner_id, privacy) VALUES (%s %s %s);"
+    query = "INSERT INTO packs (name, owner_id, privacy) VALUES (%s, %s, %s);"
     cursor.execute(query, (name, owner, privacy))
-    base.commit()
+
     query = "SELECT pack_id FROM packs WHERE name = {} AND owner_id = {};"
     cursor.execute(query, (name, owner))
-    pack_id = cursor.fetchall()[0].pack_id
+
     query = "INSERT INTO user_packs (user_id, pack_id, status) VALUES (%s, %s, %s));"
+    pack_id = cursor.fetchone().pack_id
     cursor.execute(query, (owner, pack_id, status))
+
     base.commit()
     return pack_id
 
