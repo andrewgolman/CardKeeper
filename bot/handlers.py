@@ -32,10 +32,11 @@ review_ch = ConversationHandler(
             review.ITERATE: [MessageHandler(Filters.text, review.review_ask)],
             review.END: [MessageHandler(Filters.text, review.end)]
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
-               CommandHandler("menu", menu.head_menu),
-               CommandHandler("begin", menu.begin)
-               ]
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
+        CommandHandler("menu", menu.head_menu),
+        CommandHandler("begin", menu.begin)
+    ]
 )
 
 learn_ch = ConversationHandler(
@@ -44,10 +45,11 @@ learn_ch = ConversationHandler(
             learn.START_LEARN: [],
             learn.LEARN: []
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
-               CommandHandler("menu", menu.head_menu),
-               CommandHandler("begin", menu.begin)
-               ]
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
+        CommandHandler("menu", menu.head_menu),
+        CommandHandler("begin", menu.begin)
+    ]
 )
 
 test_ch = ConversationHandler(
@@ -57,10 +59,11 @@ test_ch = ConversationHandler(
             review.CHOOSE_LANGUAGE: [],
             review.ITERATE: []
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
-               CommandHandler("menu", menu.head_menu),
-               CommandHandler("begin", menu.begin)
-               ]
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
+        CommandHandler("menu", menu.head_menu),
+        CommandHandler("begin", menu.begin)
+    ]
 )
 
 practise_ch = ConversationHandler(
@@ -70,10 +73,11 @@ practise_ch = ConversationHandler(
             review.CHOOSE_LANGUAGE: [],
             review.ITERATE: []
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
-               CommandHandler("menu", menu.head_menu),
-               CommandHandler("begin", menu.begin)
-               ]
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
+        CommandHandler("menu", menu.head_menu),
+        CommandHandler("begin", menu.begin)
+    ]
 )
 
 new_ch = ConversationHandler(
@@ -81,7 +85,8 @@ new_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -92,7 +97,8 @@ edit_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -102,7 +108,8 @@ update_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -113,7 +120,8 @@ groups_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -124,7 +132,8 @@ add_pack_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -135,7 +144,8 @@ appoint_admin_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -146,7 +156,8 @@ accept_users_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
@@ -157,7 +168,8 @@ invite_users_ch = ConversationHandler(
     states={
 
     },
-    fallbacks=[CommandHandler("quit", menu.quit),
+    fallbacks=[
+        CommandHandler("quit", menu.quit),
         CommandHandler("end", menu.end),
         CommandHandler("begin", menu.begin)
     ]
