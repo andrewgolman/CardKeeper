@@ -52,12 +52,12 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler("review", review.choose_pack)],
         states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
-                review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
-                review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
-                # commands through regexp
-                review.ITERATE: [MessageHandler(Filters.text, review.review_ask)],
-                review.END: [MessageHandler(Filters.text, review.end)]
+                # review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+                # review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
+                # review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+                # # commands through regexp
+                # review.ITERATE: [MessageHandler(Filters.text, review.review_ask)],
+                # review.END: [MessageHandler(Filters.text, review.end)]
         },
         fallbacks=default_fallbacks
     ),
