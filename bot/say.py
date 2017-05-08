@@ -23,6 +23,7 @@ right = "Right"
 start_mode_learning = "start_mode_learning"
 username_taken = "username_taken"
 welcome = "welcome"
+not_implemented = 'Not implemented yet, stay tuned for updates'
 
 GEN_GOAL_TYPE = ['Speech', 'Belletristic', 'Science']
 NOTIFICATION_TYPE = ['Daily', 'Weekly', 'Never']
