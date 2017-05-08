@@ -1,3 +1,4 @@
+-- TODO: UNIFY CAPITALIZATION IN ENUMS
 CREATE TYPE GEN_GOAL_TYPE AS ENUM ('Science', 'Speech', 'Belletristic');
 CREATE TYPE NOTIFICATION_TYPE AS ENUM ('Twice a day', 'Daily', 'Weekly', 'Never');
 CREATE TYPE PRIVACY_TYPE AS ENUM ('private', 'protected',  'public');

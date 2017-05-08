@@ -46,15 +46,15 @@ def new_card(front, back):
     base.commit()
 
 
-def new_pack(name, owner, privacy='public', status='active'):
+def new_pack(name, owner, privacy='public', status='Active'):
     query = "INSERT INTO packs (name, owner_id, privacy) VALUES (%s, %s, %s);"
     cursor.execute(query, (name, owner, privacy))
 
-    query = "SELECT pack_id FROM packs WHERE name = {} AND owner_id = {};"
+    query = "SELECT pack_id FROM packs WHERE name = %s AND owner_id = %s;"
     cursor.execute(query, (name, owner))
 
-    query = "INSERT INTO user_packs (user_id, pack_id, status) VALUES (%s, %s, %s));"
-    pack_id = cursor.fetchone().pack_id
+    query = "INSERT INTO user_packs (user_id, pack_id, status) VALUES (%s, %s, %s);"
+    pack_id = cursor.fetchone()[0]
     cursor.execute(query, (owner, pack_id, status))
 
     base.commit()
