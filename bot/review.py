@@ -6,14 +6,27 @@ import menu
 from utils import send, user
 from random import shuffle
 
-CHOOSE_PACK, CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, ITERATE, END = tuple(range(5))
+CHOOSE_PACK, CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, START_EX, ITERATE, END = tuple(range(6))
 
-review_types = ["Trust", "Enter"]
+review_types = ["Trust", "Enter", "Test", "Practise"]
 review_state = {}
 languages = ["Front", "Back"]
 practise_markup = ["Proceed"]
 
-review_markup = ["Right", "Wrong"]
+trust_markup = ["Right", "Wrong"]
+
+# ConversationHandler(
+#         entry_points=[CommandHandler("review", review.choose_pack)],
+#         states={
+#                 review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+#                 review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
+#                 review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+#                 # commands through regexp
+#                 review.ITERATE: [MessageHandler(Filters.text, review.review_ask)],
+#                 review.END: [MessageHandler(Filters.text, review.end)]
+#         },
+#         fallbacks=default_fallbacks
+#     )
 
 
 class ReviewState:
@@ -21,7 +34,7 @@ class ReviewState:
         self.cards = items
         self.right_answers = []
         self.wrong_answers = []
-        self.type = review_types[0]
+        self.type = None
         self.language = 0
         self.first_go = True
         self.last_card = None
@@ -63,9 +76,12 @@ class ReviewState:
             return None
         return answer
 
+    def test_markup(self):
+        pass
+
 
 def choose_pack(bot, update):
-    packs = queries.active_packs(update.message.from_user.id)
+    packs = queries.active_packs(user(update))
     if not packs:
         send(update, say.no_packs_available)
         return ConversationHandler.END
@@ -110,36 +126,34 @@ def language_chosen(bot, update):
         send(update, say.incorrect_input)
         return choose_language(bot, update)
     review_state[user(update)].language = (0 if update.message.text == languages[0] else 1)
-    return ITERATE
+    return START_EX
 
 
-def review_ask(bot, update):
-    send(update, review_state[user(update)].next()[2 if review_state[user(update)].language else 1], markup=[review_markup])
-    return ITERATE
+def init_test_type(bot, update):
+    review_state[user(update)].review_type = review_types[2]
+    return ask()
 
 
-def review_check(bot, update):
-    send(update, review_state[user(update)].next()[1 if review_state[user(update)].language else 2])
-    if ((review_state[user(update)].review_type == review_types[0] and update.message.text == review_markup[0])
-            or (review_state[user(update)].review_type == review_types[1]
-                and not review_state[user(update)].compare(update.message.text))):
-        review_state[user(update)].right()
-        # class update?
+def init_practise_type(bot, update):
+    review_state[user(update)].review_type = review_types[3]
+    return ask()
+
+
+def ask(bot, update):
+    if review_state[user(update)].review_type == review_types[0]:
+        opts = review_markup
+    elif review_state[user(update)].review_type == review_types[1]:
+        opts = None
+    elif review_state[user(update)].review_type == review_types[2]:
+        opts = review_state[user(update)].test_markup()
     else:
-        review_state[user(update)].wrong()
-    if not review_state[user(update)].cards:
-        return end(bot, update)
-    return review_ask(bot, update)
-
-
-def test_ask(bot, update):
-    test_markup = review_state[user(update)].test_markup()
-    send(update, review_state[user(update)].next()[2 if review_state[user(update)].language else 1], markup=[test_markup])
+        opts = practise_markup
+    send(update, review_state[user(update)].ask(), markup=opts)
     return ITERATE
 
 
-def test_check(bot, update):
-    true_ans = review_state[user(update)].compare(update.message.text)
+def check(bot, update):
+    true_ans = review_state[user(update)].compare(update.message.text.strip())
     if not true_ans:
         review_state[user(update)].right()
         send(update, say.right)
@@ -148,12 +162,21 @@ def test_check(bot, update):
         send(update, say.wrong(true_ans))
     if not review_state[user(update)].cards:
         return end(bot, update)
-    return test_ask(bot, update)
+    return ask(bot, update)
 
 
-def practise_ask(bot, update):
-    send(update, review_state[user(update)].next()[2 if review_state[user(update)].language else 1], markup=[practise_markup])
-    return ITERATE
+# def trust_check(bot, update):
+#
+#     if ((review_state[user(update)].review_type == review_types[0] and update.message.text == review_markup[0])
+#             or (review_state[user(update)].review_type == review_types[1]
+#                 and not review_state[user(update)].compare(update.message.text))):
+#         review_state[user(update)].right()
+#         # class update?
+#     else:
+#         review_state[user(update)].wrong()
+#     if not review_state[user(update)].cards:
+#         return end(bot, update)
+#     return ask(bot, update)
 
 
 def end(bot, update):
