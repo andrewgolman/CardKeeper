@@ -72,7 +72,7 @@ def cancel(bot, update):
 
 
 def menu(bot, update):
-    ways = ["/Begin", "/Packs", "/Groups", "/Settings"]
+    ways = ["/begin", "/packs", "/cards", "/groups", "/settings"]
     legend = say.menu_legend
     menu_opts = "\n".join(ways)
     utils.send(update, legend + '\n' + menu_opts)

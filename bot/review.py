@@ -151,4 +151,3 @@ def end(bot, update):
     send(update, say.inter_results(review_state[user(update)]))
     review_state[user(update)].move(user(update))
     return ITERATE
-

@@ -45,5 +45,3 @@ def add_from_file(file):
     queries.new_pack(file)
     for card in cards:
         queries.new_card(card)
-
-

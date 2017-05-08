@@ -4,7 +4,7 @@ import say
 
 
 def head_menu(bot, update):
-    ways = ["/Begin", "/Packs", "/Groups", "/Settings"]
+    ways = ["/begin", "/packs", "/groups", "/settings"]
     legend = say.menu_legend
     menu_opts = "\n".join(ways)
     update.message.reply_text(legend + '\n' + menu_opts)

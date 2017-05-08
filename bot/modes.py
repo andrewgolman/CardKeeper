@@ -11,7 +11,7 @@ selected_cards = {} # можно ли смотреть из внешних фа�
 learning_command = {}
 language = {}
 
-modes = ["Review", "Learn"]
+modes = ["review", "learn"]
 
 
 def begin(bot, update):
@@ -35,16 +35,19 @@ def choose_pack(bot, update):
     selected_packs[user_id] = queries.active_packs(user_id)[n]
 
     reply_keyboard = [modes]
-    update.message.reply_text(say.choose_mode,
-                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    update.message.reply_text(
+        say.choose_mode,
+        reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                         one_time_keyboard=True)
+    )
     return CHOOSE_MODE
 
 
 def choose_mode(bot, update):
     mode = update.message.text
-    if mode == "Review":
+    if mode == "review":
         return CHOOSE_REVIEW_TYPE
-    elif mode == "Learn":
+    elif mode == "learn":
         return START_LEARN
 
 

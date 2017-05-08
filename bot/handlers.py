@@ -16,8 +16,8 @@ def unknown(bot, update):
 unknown_message_h = MessageHandler(None, unknown)
 
 menu_h = CommandHandler("menu", menu.head_menu)
-begin_h = CommandHandler("Begin", menu.begin)
-cards_h = CommandHandler("Cards", menu.cards)
+begin_h = CommandHandler("begin", menu.begin)
+cards_h = CommandHandler("cards", menu.cards)
 admin_h = CommandHandler("menu", menu.admin)
 group_stats_h = CommandHandler("group_stats", menu.group_stats)
 
@@ -48,6 +48,14 @@ review_ch = ConversationHandler(
         CommandHandler("begin", menu.begin)
     ]
 )
+
+# TODO
+# packs_ch = ConversationHandler(
+#     entry_points=[CommandHandler('packs', packs.choose_pack)],
+#     states={
+#         packs.CHOOSE_PACK
+#     }
+# )
 
 learn_ch = ConversationHandler(
     entry_points=[CommandHandler("learn", menu.head_menu)],
