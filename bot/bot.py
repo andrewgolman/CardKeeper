@@ -1,5 +1,5 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+from telegram.ext import Updater
 import queries
 import say
 import register
@@ -37,6 +37,8 @@ def main():
     dp.add_handler(handlers.appoint_admin_ch)
     dp.add_handler(handlers.accept_users_ch)
     dp.add_handler(handlers.invite_users_ch)
+
+    dp.add_handler(handlers.unknown_message_h)
 
     updater.start_polling()
     # updater.idle()

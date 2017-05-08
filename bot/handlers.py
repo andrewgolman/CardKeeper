@@ -5,6 +5,16 @@ import register
 import review
 import learn
 
+
+def unknown(bot, update):
+    update.message.reply_text(
+        "Message you entered wasn't recognized by bot.\n"
+        'Use /help for list of all commands'
+    )
+
+
+unknown_message_h = MessageHandler(None, unknown)
+
 menu_h = CommandHandler("menu", menu.head_menu)
 begin_h = CommandHandler("Begin", menu.begin)
 cards_h = CommandHandler("Cards", menu.cards)
