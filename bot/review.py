@@ -4,6 +4,7 @@ import queries
 import say
 import menu
 from utils import send, user
+from random import shuffle
 
 CHOOSE_PACK, CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, ITERATE, END = tuple(range(5))
 
@@ -23,6 +24,7 @@ class ReviewState:
         self.type = review_types[0]
         self.language = 0
         self.first_go = True
+        self.last_card = None
         self.shuffle()
 
     def move(self, user_id):
@@ -34,30 +36,32 @@ class ReviewState:
         for i in self.wrong_answers:
             queries.update_card_data(user_id, i[0], 0)
         self.first_go = False
+        self.shuffle()
 
-    # first card bug
     def ask(self):
-        return self.cards[1][2 if self.language else 1]
+        return self.next()[2 if self.language else 1]
 
     def answer(self):
-        return self.cards[1][1 if self.language else 2]
+        self.last_card = self.next()
+        return self.next()[1 if self.language else 2]
 
     def right(self):
-        pass
+        self.right_answers.append(self.last_card)
 
     def wrong(self):
-        pass
+        self.wrong_answers.append(self.last_card)
 
     def shuffle(self):
-        pass
+        shuffle(self.cards)
 
     def next(self):
-        return self.cards[1]
+        return self.cards[0]
 
-    def check(self):
-        if True:
+    def compare(self, s):
+        answer = self.next()[2 if self.language else 1]
+        if s == answer:
             return None
-        return self.cards[0][2 if self.language else 1]
+        return answer
 
 
 def choose_pack(bot, update):
@@ -116,10 +120,15 @@ def review_ask(bot, update):
 
 def review_check(bot, update):
     send(update, review_state[user(update)].next()[1 if review_state[user(update)].language else 2])
-    if update.message.text == review_markup[0]:
+    if ((review_state[user(update)].review_type == review_types[0] and update.message.text == review_markup[0])
+            or (review_state[user(update)].review_type == review_types[1]
+                and not review_state[user(update)].compare(update.message.text))):
         review_state[user(update)].right()
+        # class update?
     else:
         review_state[user(update)].wrong()
+    if not review_state[user(update)].cards:
+        return end(bot, update)
     return review_ask(bot, update)
 
 
@@ -132,9 +141,13 @@ def test_ask(bot, update):
 def test_check(bot, update):
     true_ans = review_state[user(update)].compare(update.message.text)
     if not true_ans:
+        review_state[user(update)].right()
         send(update, say.right)
     else:
+        review_state[user(update)].wrong()
         send(update, say.wrong(true_ans))
+    if not review_state[user(update)].cards:
+        return end(bot, update)
     return test_ask(bot, update)
 
 
