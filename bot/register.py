@@ -65,10 +65,10 @@ def notify_stats(bot, update):
     queries.add_user(users_in_process.pop(update.message.from_user.id))
     return ConversationHandler.END
 
-
-def cancel(bot, update):
-    utils.send(update, say.register_to_access)
-    return ConversationHandler.END
+#
+# def cancel(bot, update):
+#     utils.send(update, say.register_to_access)
+#     return ConversationHandler.END
 
 
 def menu(bot, update):
