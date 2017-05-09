@@ -90,5 +90,5 @@ def update_card_status(user_id, card_id, status):
 
 def update_pack_status(user_id, pack_id, status):
     query = """UPDATE user_cards SET status = %s
-                WHERE user_id = {} AND card_id = {}"""
+                WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query, (status, user_id, pack_id))
