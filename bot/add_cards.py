@@ -1,4 +1,4 @@
-import queries
+from db import queries
 
 formats = ["", ".txt", ".doc"]
 

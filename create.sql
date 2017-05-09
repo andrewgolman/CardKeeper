@@ -36,7 +36,7 @@ CREATE TABLE cards (
     pack_id 	INTEGER 	REFERENCES packs (pack_id),
     front 		TEXT 		NOT NULL,
     back 		  TEXT,
-    comment 	TEXT,
+    comment     TEXT,
     type      CARD_TYPE
 );
 

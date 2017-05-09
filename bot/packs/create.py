@@ -2,7 +2,7 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
 import say
 from utils import user
-import queries
+from db import queries
 
 END = ConversationHandler.END
 START = 0

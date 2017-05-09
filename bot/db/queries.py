@@ -1,4 +1,5 @@
 import psycopg2
+from db.enums import *
 
 base = psycopg2.connect("dbname='cardkeepersample' user='andrew' host='localhost' password='1234'")
 cursor = base.cursor()
@@ -15,8 +16,8 @@ def add_user(user):
 
 def active_packs(user_id):
     query = """SELECT packs.pack_id, packs.name FROM user_packs, packs WHERE packs.pack_id = user_packs.pack_id
-                AND user_packs.status = 'Active' AND user_id = %s ORDER BY pack_id;"""
-    cursor.execute(query, (user_id,))
+                AND user_packs.status = %s AND user_id = %s ORDER BY pack_id;"""
+    cursor.execute(query, (CardStatusType.ACTIVE.value, user_id))
     return cursor.fetchall()
 
 
@@ -35,8 +36,8 @@ def if_username_taken(username):
 def cards_for_learning(user_id):
     query = """SELECT cards.front, cards.back, cards.comment FROM user_cards, cards
                 WHERE user_cards.card_id = cards.card_id AND
-                user_id = %s AND cards.type = 'Short'"""
-    cursor.execute(query, (user_id,))
+                user_id = %s AND cards.type = %s"""
+    cursor.execute(query, (user_id, CardType.SHORT))
     return cursor.fetchall()
 
 
@@ -46,7 +47,12 @@ def new_card(front, back):
     base.commit()
 
 
-def new_pack(name, owner, privacy='public', status='Active'):
+def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTIVE):
+    if isinstance(privacy, PrivacyType):
+        privacy = privacy.value
+    if isinstance(status, CardStatusType):
+        status = status.value
+
     query = "INSERT INTO packs (name, owner_id, privacy) VALUES (%s, %s, %s);"
     cursor.execute(query, (name, owner, privacy))
 
@@ -63,14 +69,14 @@ def new_pack(name, owner, privacy='public', status='Active'):
 
 def select_cards(user_id, pack_id):
     query = """SELECT cards.front, cards.back, cards.comment FROM cards, user_cards
-                WHERE cards.card_id = user_cards.card_id AND user_cards.status = 'Active'
+                WHERE cards.card_id = user_cards.card_id AND user_cards.status = %s
                 AND cards.pack_id = %s AND user_cards.user_id = %s"""
-    cursor.execute(query, (user_id, pack_id))
+    cursor.execute(query, (CardStatusType.ACTIVE, user_id, pack_id))
     return cursor.fetchall()
 
 
 def update_card_data(user_id, card_id, answer):
-    query = """UPDATE user_cards SET times_reviewed = times_reviewed+1, correct_answers = correct_answers+{}
+    query = """UPDATE user_cards SET times_reviewed = times_reviewed+1, correct_answers = correct_answers+%s
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query,  (answer, user_id, card_id))
     return cursor.fetchall()

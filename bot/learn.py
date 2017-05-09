@@ -1,6 +1,6 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-import queries
+from db import queries
 import say
 from random import shuffle
 from utils import send, user

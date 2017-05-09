@@ -1,5 +1,5 @@
 from telegram.ext import Updater
-import queries
+from db import queries
 import say
 import register
 import handlers

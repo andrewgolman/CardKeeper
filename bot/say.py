@@ -1,3 +1,5 @@
+from db import enums
+
 already_registered = "There is already an account for user with this TelegramID.\n"
 begin_legend = "begin_legend"
 completed = "You can completed an exercise. If you've done it well - congrats:)"
@@ -29,8 +31,9 @@ start_mode_learning = "start_mode_learning"
 username_taken = "Oops. Our usernames are unique and this one seems to be taken. Please, try another one."
 welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick registration procedure."
 
-GEN_GOAL_TYPE = ['Speech', 'Belletristic', 'Science']
-NOTIFICATION_TYPE = ['Daily', 'Weekly', 'Never']
+GEN_GOAL_TYPE = [v.value for k, v in enums.GenGoalType.__members__.items()]
+NOTIFICATION_TYPE = [v.value for k, v in enums.NotificationType.__members__.items()]
+# [v for k, v in enums.NotificationType.__members__.items()]
 
 
 def choose_language(card):
