@@ -9,6 +9,18 @@ import admin
 import groups
 import packs.edit
 import packs.create
+from user_states import states
+from utils import user
+
+
+def destruct(func):
+    def res(bot, update):
+        try:
+            states.pop(user(update))
+        except KeyError:
+            pass
+        return func(bot, update)
+    return res
 
 
 def unknown(bot, update):
@@ -113,7 +125,7 @@ conversation_handlers = [
                 review.END: [MessageHandler(Filters.text, review.end)],
                 review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
         },
-        fallbacks=default_fallbacks()
+        fallbacks=default_fallbacks(destruct)
     ),
 
     ConversationHandler(
@@ -130,7 +142,7 @@ conversation_handlers = [
                           # MessageHandler(Filters.text, learn.handle)
                           ]
         },
-        fallbacks=default_fallbacks(learn.destruct)
+        fallbacks=default_fallbacks(destruct)
     ),
 
 
@@ -144,7 +156,7 @@ conversation_handlers = [
                 review.END: [MessageHandler(Filters.text, review.end)],
                 review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
         },
-        fallbacks=default_fallbacks()
+        fallbacks=default_fallbacks(destruct)
     ),
 
 
@@ -158,7 +170,7 @@ conversation_handlers = [
                 review.END: [MessageHandler(Filters.text, review.end)],
                 review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
         },
-        fallbacks=default_fallbacks()
+        fallbacks=default_fallbacks(destruct)
     ),
 
     # ConversationHandler(
