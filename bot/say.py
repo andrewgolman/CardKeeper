@@ -4,7 +4,8 @@ already_registered = "There is already an account for user with this TelegramID.
 begin_legend = "begin_legend"
 completed = "You can completed an exercise. If you've done it well - congrats:)"
 choose_a_pack = "Choose a pack from a list below. Enter a number of a pack."
-choose_general_goal = "Choose a general goal for your learning. That will help me to suggest you learning groups."
+choose_general_goal = """Let's start with choosing a general goal for your learning.
+    That will help me to suggest you entering different groups."""
 choose_learn_notifications = """"I can remind you to look through your cards if you are off for a while. Please,
     choose how often you wish to receive these notifications."""
 choose_mode = "Please, choose one of suggested modes. You can type /modes_help to find out more about them."
@@ -19,6 +20,7 @@ choose_weekly_goal = """Your weekly goal is a number of cards to learn in a week
 hello = "Hey, you're back! Time to make some progress, isn't it?"
 incorrect_input = """Seems that you have enter something I hadn't expected. Please, read my previous instructions
     carefully, try again or type /help."""
+incorrect_weekly_goal = "Please, enter a positive integer not exceeding 1000."
 learning_mode_legend = """Enter a number of a card to see the other side. You can /shuffle the cards,
     /change_language or /quit."""
 menu_legend = "You are in the main menu. Choose a command from below list to begin."
