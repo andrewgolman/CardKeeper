@@ -26,7 +26,9 @@ learning_mode_legend = """Enter a number of a card to see the other side. You ca
 menu_legend = "You are in the main menu. Choose a command from below list to begin."
 no_packs_available = "No packs to show. You can add some with /new or activate with /update."
 not_implemented = "Not implemented yet, stay tuned for updates."
-pack_is_empty = "Oops, there are no cards in this packs. You can add some using /edit."
+not_recognized = """Your message wasn't recognized by bot:(\n
+        Use /help for list of all commands"""
+pack_is_empty = "Oops, there are no cards in this pack. You can add some using /edit."
 registration_completed = "Congrats, you've completed the registration and are able to use all available functions."
 right = "OK."
 start_mode_learning = "start_mode_learning"
@@ -40,7 +42,7 @@ NOTIFICATION_TYPE = [v.value for k, v in enums.NotificationType.__members__.item
 
 def choose_language(card):
     res = "choose_language"
-    res = res + "\n" + "front - as " + card[0] + "\n" + "back - as " + card[1]
+    return str(res) + "\n" + "front - as " + card[1] + "\n" + "back - as " + card[2]
 
 
 def enumerated(items):
