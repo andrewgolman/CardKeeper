@@ -23,7 +23,7 @@ def main():
     for handler in handlers.conversation_handlers:
         dp.add_handler(handler)
 
-    dp.add_handler(handlers.unknown_message_h)
+    dp.add_handler(handlers.unknown_message_handler)
 
     updater.start_polling()
     # updater.idle()
