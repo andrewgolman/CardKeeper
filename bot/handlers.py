@@ -90,6 +90,7 @@ simple_handlers = [
     CommandHandler("cards", menu.cards),
     CommandHandler("menu", menu.admin),
     CommandHandler("group_stats", menu.group_stats),
+    CommandHandler("help", menu.help)
 ]
 
 conversation_handlers = [
