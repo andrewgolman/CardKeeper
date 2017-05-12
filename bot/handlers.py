@@ -32,7 +32,14 @@ def cancel(bot, update):
     return ConversationHandler.END
 
 
-def default_fallbacks(wrap=lambda x: x):
+def default_fallback_wrapper(func):
+    def f(*args, **kwargs):
+        func(*args, **kwargs)
+        return ConversationHandler.END
+    return f
+
+
+def default_fallbacks(wrap=default_fallback_wrapper):
     return [
             CommandHandler('cancel', wrap(cancel)),
             CommandHandler('quit', wrap(menu.head_menu)),
@@ -115,20 +122,6 @@ conversation_handlers = [
     ),
 
     ConversationHandler(
-        entry_points=[CommandHandler("review", review.init_review)],
-        states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
-                review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
-                review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
-                review.ITERATE: [CommandHandler("change_language", review.change_language),
-                                 MessageHandler(Filters.text, review.ask)],
-                review.END: [MessageHandler(Filters.text, review.end)],
-                review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
-        },
-        fallbacks=default_fallbacks(destruct)
-    ),
-
-    ConversationHandler(
         entry_points=[CommandHandler("learn", learn.choose_pack)],
         states={
             learn.CHOOSE_PACK: [MessageHandler(Filters.text, learn.pack_chosen)],
@@ -145,6 +138,19 @@ conversation_handlers = [
         fallbacks=default_fallbacks(destruct)
     ),
 
+    ConversationHandler(
+        entry_points=[CommandHandler("review", review.init_review)],
+        states={
+                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+                review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
+                review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+                review.ITERATE: [CommandHandler("change_language", review.change_language),
+                                 MessageHandler(Filters.text, review.check)],
+                review.END: [MessageHandler(Filters.text, review.end)],
+                review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
+        },
+        fallbacks=default_fallbacks(destruct)
+    ),
 
     ConversationHandler(
         entry_points=[CommandHandler("test", review.init_test)],
@@ -152,7 +158,7 @@ conversation_handlers = [
                 review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
                 review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
                 review.ITERATE: [CommandHandler("change_language", review.change_language),
-                                 MessageHandler(Filters.text, review.ask)],
+                                 MessageHandler(Filters.text, review.check)],
                 review.END: [MessageHandler(Filters.text, review.end)],
                 review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
         },
@@ -161,12 +167,12 @@ conversation_handlers = [
 
 
     ConversationHandler(
-        entry_points=[CommandHandler("practise", review.init_practise)],
+        entry_points=[CommandHandler("practice", review.init_practice)],
         states={
                 review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
                 review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
-                review.ITERATE: [CommandHandler("change_language", review.change_language),
-                                 MessageHandler(Filters.text, review.ask)],
+                review.ITERATE: [#CommandHandler("change_language", review.change_language),
+                                 MessageHandler(Filters.text, review.check)],
                 review.END: [MessageHandler(Filters.text, review.end)],
                 review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
         },
