@@ -100,13 +100,3 @@ def card_shuffle(bot, update):
 def change_language(bot, update):
     states[user(update)].language = not states[user(update)].language
     return ask(update)
-
-
-def destruct(func):
-    def res(bot, update):
-        try:
-            states.pop(user(update))
-        except KeyError:
-            pass
-        return func(bot, update)
-    return res

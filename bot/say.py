@@ -18,10 +18,27 @@ choose_username = "Our system will remember you by your TelegramID and nickname.
 choose_weekly_goal = """Your weekly goal is a number of cards to learn in a week. I recommend at least 50 cards, but
     you may go for more! Enter a number to continue."""
 hello = "Hey, you're back! Time to make some progress, isn't it?"
+help = "/menu - head menu\n" \
+       "/begin - choose exercise\n" \
+       "/packs - edit your packs and cards\n" \
+       "/groups - edit or admin your groups\n" \
+       "\n" \
+       "/review mode. Go through the pack and remember cards\n" \
+       "/test mode\n" \
+       "/learn mode - see the cards all together\n" \
+       "/quit mode\n" \
+       " \n" \
+       "/new_pack - add new pack with some cards \n" \
+       " \n" \
+       " \n" \
+       " \n" \
+       " \n" \
+
 incorrect_input = """Seems that you have enter something I hadn't expected. Please, read my previous instructions
     carefully, try again or type /help."""
 incorrect_weekly_goal = "Please, enter a positive integer not exceeding 1000."
 invalid_pack = 'Pack file is invalid (line {})'
+last_answer = "Your last answer was:"
 learning_mode_legend = """Enter a number of a card to see the other side. You can /shuffle the cards,
     /change_language or /quit."""
 menu_legend = "You are in the main menu. Choose a command from below list to begin."
@@ -55,7 +72,7 @@ def enumerated(items):
     return res
 
 
-def inter_results(a, b):
+def inter_results(a, b=None):
     return str(a) + " / " + str(b)
 
 

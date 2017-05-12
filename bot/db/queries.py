@@ -86,7 +86,7 @@ def update_card_data(user_id, card_id, answer):
     query = """UPDATE user_cards SET times_reviewed = times_reviewed+1, correct_answers = correct_answers+%s
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query,  (answer, user_id, card_id))
-    return cursor.fetchall()
+    base.commit()
 
 
 def update_card_status(user_id, card_id, status):
