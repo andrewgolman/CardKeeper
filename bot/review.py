@@ -9,11 +9,21 @@ from user_states import states
 
 CHOOSE_PACK, CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, QUIT, ITERATE, END = tuple(range(6))
 
-review_types = ["Trust", "Enter", "Test", "Practise"]
+
+class ReviewTypes:
+    TRUST = "Trust"
+    ENTER = "Enter"
+    TEST = "Test"
+    PRACTICE = "Practice"
+
+
+review_types_markup = [ReviewTypes.TRUST, ReviewTypes.ENTER]
+
 languages = ["Front", "Back"]
-practise_markup = ["Proceed"]
+practice_markup = ["Proceed"]
 
 trust_markup = ["Right", "Wrong", "/change_language"]
+start_markup = ["Start!"]
 
 
 class ReviewState:
@@ -25,35 +35,36 @@ class ReviewState:
         self.language = 0
         self.first_go = True
         self.last_card = None
-        self.shuffle()
 
-    def move(self, user_id):
+    def get_cards(self, cards):
+        self.cards = cards
+
+    def move(self, update):
         self.cards = self.wrong_answers
         self.wrong_answers = []
-        if self.first_go:
+        if self.first_go and self.type != ReviewTypes.PRACTICE:
             for i in self.right_answers:
-                queries.update_card_data(user_id, i[0], 1)
+                queries.update_card_data(user(update), i[0], 1)
         for i in self.wrong_answers:
-            queries.update_card_data(user_id, i[0], 0)
+            queries.update_card_data(user(update), i[0], 0)
         self.first_go = False
         self.shuffle()
 
     def ask(self):
-        self.last_card = self.next()
-        return self.last_card[2 if self.language else 1]
+        return self.next()[2 if self.language else 1]
 
     def answer(self):
-        return self.last_card[1 if self.language else 2]
+        return (self.last_card or self.next())[1 if self.language else 2]
 
-    def right(self, update):
-        send(update, say.right)
-        self.right_answers.append(self.next())
-        self.cards.pop(0)
+    def right(self, update, printing=False):
+        if printing:
+            send(update, say.right)
+        self.right_answers.append(self.last_card)
 
     def wrong(self, update, true_ans):
-        send(update, say.wrong(true_ans))
-        self.wrong_answers.append(self.next())
-        self.cards.pop(0)
+        if true_ans:
+            send(update, say.wrong(true_ans))
+        self.wrong_answers.append(self.last_card)
 
     def shuffle(self):
         shuffle(self.cards)
@@ -61,39 +72,42 @@ class ReviewState:
     def next(self):
         return self.cards[0]
 
+    def pop(self):
+        self.cards.pop(0)
+
     def compare(self, s):
-        answer = self.last_card[2 if self.language else 1]
+        answer = self.last_card[1 if self.language else 2]
         if s == answer:
             return None
         return answer
 
     def test_markup(self):
-        answers = []
-        for i in self.cards, self.right_answers, self.wrong_answers:
-            answers.append(i[1 if self.language else 2])
+        answers = [self.next()[1 if self.language else 2]]
+        for i in (self.cards + self.right_answers + self.wrong_answers):
+            if i != self.next():
+                answers.append(i[1 if self.language else 2])
+        shuffle(answers[1:])
+        answers = answers[:3]
         shuffle(answers)
-        return shuffle(self.answer() + answers[:2])
+        return answers
 
-    def last_right(self, update):
-        send(update, say.last_answer)
-        self.right_answers.append(self.last_card)
-
-    def last_wrong(self, update):
-        self.wrong_answers.append(self.last_card)
+    def store(self):
+        self.last_card = self.next()
+        self.pop()
 
 
 def init_review(bot, update):
-    states[user(update)] = ReviewState(review_types[0])
+    states[user(update)] = ReviewState(ReviewTypes.TRUST)
     return choose_pack(bot, update)
 
 
 def init_test(bot, update):
-    states[user(update)] = ReviewState(review_types[2])
+    states[user(update)] = ReviewState(ReviewTypes.TEST)
     return choose_pack(bot, update)
 
 
-def init_practise(bot, update):
-    states[user(update)] = ReviewState(review_types[3])
+def init_practice(bot, update):
+    states[user(update)] = ReviewState(ReviewTypes.PRACTICE)
     return choose_pack(bot, update)
 
 
@@ -109,25 +123,25 @@ def choose_pack(bot, update):
 def pack_chosen(bot, update):
     try:
         pack_id = queries.active_packs(update.message.from_user.id)[int(update.message.text) - 1][0]
-    except TypeError or IndexError:
+    except (TypeError, IndexError, ValueError):
         send(update, say.incorrect_input)
         return choose_pack(bot, update)
     cards = queries.select_cards(user(update), pack_id)
     if not cards:
         send(update, say.pack_is_empty)
         return choose_pack(bot, update)
-    states[user(update)].cards = cards
-    return choose_review_type(bot, update) if states[user(update)] == review_types[0] else choose_language(bot, update)
+    states[user(update)].get_cards(cards)
+    return choose_review_type(bot, update) if states[user(update)].type == ReviewTypes.TRUST else choose_language(bot, update)
 
 
 def choose_review_type(bot, update):
-    send(update, say.choose_type_of_review, markup=[review_types])
+    send(update, say.choose_type_of_review, markup=review_types_markup)
     return CHOOSE_REVIEW_TYPE
 
 
 def review_type_chosen(bot, update):
-    if update.message.text not in review_types:
-        send(update, say.incorrect_input, markup=[review_types])
+    if update.message.text not in review_types_markup:
+        send(update, say.incorrect_input, markup=review_types_markup)
         return choose_review_type(bot, update)
     states[user(update)].type = update.message.text
     return choose_language(bot, update)
@@ -143,38 +157,54 @@ def language_chosen(bot, update):
         send(update, say.incorrect_input)
         return choose_language(bot, update)
     states[user(update)].language = (0 if update.message.text == languages[0] else 1)
-    return ITERATE
+    states[user(update)].shuffle()
+    return ask(bot, update) if states[user(update)].type != ReviewTypes.TRUST else ask(bot, update, start_markup)
 
 
-def ask(bot, update):
-    if states[user(update)].review_type == review_types[0]:
+def ask(bot, update, special_markup=None):
+    if states[user(update)].type == ReviewTypes.TRUST:
         opts = trust_markup
-    elif states[user(update)].review_type == review_types[1]:
+    elif states[user(update)].type == ReviewTypes.ENTER:
         opts = None
-    elif states[user(update)].review_type == review_types[2]:
+    elif states[user(update)].type == ReviewTypes.TEST:
         opts = states[user(update)].test_markup()
     else:
-        opts = practise_markup
-    send(update, states[user(update)].ask(), markup=opts)
+        opts = practice_markup
+
+    send(update, states[user(update)].ask(), markup=(special_markup or opts))
+
+    if states[user(update)].type != ReviewTypes.TRUST:
+        states[user(update)].store()
     return ITERATE
 
 
 def check(bot, update):
-    true_ans = states[user(update)].compare(update.message.text.strip())
-    if not true_ans:
+    if states[user(update)].type == ReviewTypes.TRUST:
+        return trust_check(bot, update)
+    if states[user(update)].type == ReviewTypes.PRACTICE:
         states[user(update)].right(update)
     else:
-        states[user(update)].wrong(update, true_ans)
+        true_ans = states[user(update)].compare(update.message.text.strip())
+        if not true_ans:
+            states[user(update)].right(update)
+        else:
+            states[user(update)].wrong(update, true_ans)
     if not states[user(update)].cards:
         return end(bot, update)
     return ask(bot, update)
 
 
 def trust_check(bot, update):
-    if update.message.text == trust_markup[0]:
-        states[user(update)].last_right()
+    if update.message.text == start_markup[0]:
+        pass
+    elif update.message.text == trust_markup[0]:
+        states[user(update)].right(update)
     else:
-        states[user(update)].last_wrong()
+        states[user(update)].wrong(update, None)
+    states[user(update)].store()
+    send(update, states[user(update)].answer())
+    if not states[user(update)].cards:
+        return end(bot, update)
     return ask(bot, update)
 
 
@@ -184,8 +214,8 @@ def end(bot, update):
         review_quit(bot, update)
         return QUIT
     send(update, say.inter_results(states[user(update)]))
-    states[user(update)].move(user(update))
-    return ITERATE
+    states[user(update)].move(update)
+    return ask(bot, update)
 
 
 def change_language(bot, update):
@@ -195,5 +225,6 @@ def change_language(bot, update):
 
 def review_quit(bot, update):
     states.pop(user(update))
+    send(update, "Quitting...")
     menu.head_menu(bot, update)
     return ConversationHandler.END
