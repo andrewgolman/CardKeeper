@@ -21,17 +21,20 @@ hello = "Hey, you're back! Time to make some progress, isn't it?"
 incorrect_input = """Seems that you have enter something I hadn't expected. Please, read my previous instructions
     carefully, try again or type /help."""
 incorrect_weekly_goal = "Please, enter a positive integer not exceeding 1000."
+invalid_pack = 'Pack file is invalid (line {})'
 learning_mode_legend = """Enter a number of a card to see the other side. You can /shuffle the cards,
     /change_language or /quit."""
 menu_legend = "You are in the main menu. Choose a command from below list to begin."
 no_packs_available = "No packs to show. You can add some with /new or activate with /update."
 not_implemented = "Not implemented yet, stay tuned for updates."
-not_recognized = """Your message wasn't recognized by bot:(\n
-        Use /help for list of all commands"""
+not_recognized = "Your message wasn't recognized by bot\n" + \
+    "Use /help for list of all commands"
+pack_created = 'Pack {} successfully created'
 pack_is_empty = "Oops, there are no cards in this pack. You can add some using /edit."
 registration_completed = "Congrats, you've completed the registration and are able to use all available functions."
 right = "OK."
 start_mode_learning = "start_mode_learning"
+upload_pack_file = "Please send .pack file\nIt should contain cards as 'front side' - 'back side'"
 username_taken = "Oops. Our usernames are unique and this one seems to be taken. Please, try another one."
 welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick registration procedure."
 

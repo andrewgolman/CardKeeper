@@ -1,4 +1,5 @@
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
+import traceback
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, TelegramError
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, RegexHandler
 import menu
 import register
@@ -11,6 +12,15 @@ import packs.edit
 import packs.create
 
 
+# python-telegram-bot logs non-TelegramError exceptions to ERROR logger
+# For TelegramErrors it just displays warning :shrug:
+# However, one can only catch TelegramError by specifying error handler
+# It's funny though that it will only catch TelegramError s
+# Anyway, ... WTF?
+def telegram_error_handler(bot, update, err):
+    traceback.print_exception(TelegramError, err, None)
+
+
 def unknown(bot, update):
     update.message.reply_text(say.not_recognized)
 
@@ -18,6 +28,10 @@ def unknown(bot, update):
 def cancel(bot, update):
     update.message.reply_text('Cancelled current action')
     return ConversationHandler.END
+
+
+def cancel_outside(bot, update):
+    update.message.reply_text('Cannot use /cancel outside of conversation')
 
 
 def default_fallbacks(wrap=lambda x: x):
@@ -71,6 +85,9 @@ simple_handlers = [
     CommandHandler("cards", menu.cards),
     CommandHandler("menu", menu.admin),
     CommandHandler("group_stats", menu.group_stats),
+
+    # TODO: warn if cancel is used outside of ConversationHandler
+    # CommandHandler('cancel', cancel_outside)
 ]
 
 conversation_handlers = [
@@ -97,24 +114,25 @@ conversation_handlers = [
         entry_points=[CommandHandler('new_pack', packs.create.start)],
         states={
             packs.create.CHOOSE_NAME: [MessageHandler(Filters.text, packs.create.choose_name)],
-            packs.create.CHOOSE_PRIVACY: [MessageHandler(Filters.text, packs.create.choose_privacy)]
+            packs.create.CHOOSE_PRIVACY: [MessageHandler(Filters.text, packs.create.choose_privacy)],
+            packs.create.CHOOSE_PACK_FILE: [MessageHandler(Filters.document, packs.create.choose_pack_file)]
         },
         fallbacks=default_fallbacks()
     ),
 
-    ConversationHandler(
-        entry_points=[CommandHandler("review", review.init_review)],
-        states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
-                review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
-                review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
-                review.ITERATE: [CommandHandler("change_language", review.change_language),
-                                 MessageHandler(Filters.text, review.ask)],
-                review.END: [MessageHandler(Filters.text, review.end)],
-                review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
-        },
-        fallbacks=default_fallbacks()
-    ),
+    # ConversationHandler(
+    #     entry_points=[CommandHandler("review", review.init_review)],
+    #     states={
+    #             review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+    #             review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
+    #             review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+    #             review.ITERATE: [CommandHandler("change_language", review.change_language),
+    #                              MessageHandler(Filters.text, review.ask)],
+    #             review.END: [MessageHandler(Filters.text, review.end)],
+    #             review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
+    #     },
+    #     fallbacks=default_fallbacks()
+    # ),
 
     ConversationHandler(
         entry_points=[CommandHandler("learn", learn.choose_pack)],
@@ -134,32 +152,32 @@ conversation_handlers = [
     ),
 
 
-    ConversationHandler(
-        entry_points=[CommandHandler("test", review.init_test)],
-        states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
-                review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
-                review.ITERATE: [CommandHandler("change_language", review.change_language),
-                                 MessageHandler(Filters.text, review.ask)],
-                review.END: [MessageHandler(Filters.text, review.end)],
-                review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
-        },
-        fallbacks=default_fallbacks()
-    ),
+    # ConversationHandler(
+    #     entry_points=[CommandHandler("test", review.init_test)],
+    #     states={
+    #             review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+    #             review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+    #             review.ITERATE: [CommandHandler("change_language", review.change_language),
+    #                              MessageHandler(Filters.text, review.ask)],
+    #             review.END: [MessageHandler(Filters.text, review.end)],
+    #             review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
+    #     },
+    #     fallbacks=default_fallbacks()
+    # ),
 
 
-    ConversationHandler(
-        entry_points=[CommandHandler("practise", review.init_practise)],
-        states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
-                review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
-                review.ITERATE: [CommandHandler("change_language", review.change_language),
-                                 MessageHandler(Filters.text, review.ask)],
-                review.END: [MessageHandler(Filters.text, review.end)],
-                review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
-        },
-        fallbacks=default_fallbacks()
-    ),
+    # ConversationHandler(
+    #     entry_points=[CommandHandler("practise", review.init_practise)],
+    #     states={
+    #             review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+    #             review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
+    #             review.ITERATE: [CommandHandler("change_language", review.change_language),
+    #                              MessageHandler(Filters.text, review.ask)],
+    #             review.END: [MessageHandler(Filters.text, review.end)],
+    #             review.QUIT: [MessageHandler(Filters.text, review.review_quit)]
+    #     },
+    #     fallbacks=default_fallbacks()
+    # ),
 
     # ConversationHandler(
     #     entry_points=[CommandHandler("admin", admin.start)],

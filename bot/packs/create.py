@@ -1,13 +1,16 @@
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+import io
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, File
 from telegram.ext import ConversationHandler
 import say
 from utils import user
 from db import queries
+from packs import packfile
 
 END = ConversationHandler.END
 START = 0
 CHOOSE_NAME = 1
 CHOOSE_PRIVACY = 2
+CHOOSE_PACK_FILE = 3
 
 _states = {}
 
@@ -20,7 +23,6 @@ def start(bot, update):
 
 def choose_name(bot, update):
     state = _states[user(update)]
-    print(update.message.text)
     state['name'] = update.message.text
     update.message.reply_text(say.choose_pack_privacy)
     return CHOOSE_PRIVACY
@@ -28,10 +30,31 @@ def choose_name(bot, update):
 
 def choose_privacy(bot, update):
     state = _states[user(update)]
-    print(update.message.text)
     state['privacy'] = update.message.text
+    update.message.reply_text(say.upload_pack_file)
+    return CHOOSE_PACK_FILE
 
-    pack_id = queries.new_pack(state['name'], user(update), state['privacy'])
-    update.message.reply_text('Successfully created pack ' + str(pack_id))
 
+def choose_pack_file(bot, update):
+    state = _states[user(update)]
+    file_id = update.message.document.file_id
+    # Doesn't support pipe :(
+    # TODO: Delete temp file
+    bot.getFile(file_id).download('/tmp/learning_cards_' + str(file_id))
+    try:
+        pack = packfile.load(open('/tmp/learning_cards_' + str(file_id)))
+    except packfile.InvalidPack as e:
+        update.message.reply_text(say.invalid_pack.format(e.line))
+        return CHOOSE_PACK_FILE
+    update.message.reply_text(
+        'Add pack ' + state['name'] + ' (' + state['privacy'] + ')\n' +
+        'Cards: ' + str(pack)
+    )
+    pack_id = queries.new_pack(
+        name=state['name'],
+        owner=user(update),
+        privacy=state['privacy'],
+        cards=pack
+    )
+    update.message.reply_text(say.pack_created.format(pack_id))
     return END

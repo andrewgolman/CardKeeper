@@ -6,7 +6,7 @@ import handlers
 import logging
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.WARNING,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
@@ -24,6 +24,8 @@ def main():
         dp.add_handler(handler)
 
     dp.add_handler(handlers.unknown_message_handler)
+
+    dp.add_error_handler(handlers.telegram_error_handler)
 
     updater.start_polling()
     # updater.idle()

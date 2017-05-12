@@ -47,7 +47,7 @@ def new_card(front, back):
     base.commit()
 
 
-def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTIVE):
+def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTIVE, cards=[]):
     if isinstance(privacy, PrivacyType):
         privacy = privacy.value
     if isinstance(status, CardStatusType):
@@ -62,6 +62,10 @@ def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTI
     query = "INSERT INTO user_packs (user_id, pack_id, status) VALUES (%s, %s, %s);"
     pack_id = cursor.fetchone()[0]
     cursor.execute(query, (owner, pack_id, status))
+
+    for front, back in cards:
+        query = "INSERT INTO cards (pack_id, front, back, type) VALUES (%s, %s, %s, %s);"
+        cursor.execute(query, (pack_id, front, back, CardType.SHORT.value))
 
     base.commit()
     return pack_id
