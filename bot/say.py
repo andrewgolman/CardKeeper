@@ -21,6 +21,7 @@ hello = "Hey, you're back! Time to make some progress, isn't it?"
 incorrect_input = """Seems that you have enter something I hadn't expected. Please, read my previous instructions
     carefully, try again or type /help."""
 incorrect_weekly_goal = "Please, enter a positive integer not exceeding 1000."
+last_answer = "Your last answer was:"
 learning_mode_legend = """Enter a number of a card to see the other side. You can /shuffle the cards,
     /change_language or /quit."""
 menu_legend = "You are in the main menu. Choose a command from below list to begin."
@@ -52,7 +53,7 @@ def enumerated(items):
     return res
 
 
-def inter_results(a, b):
+def inter_results(a, b=None):
     return str(a) + " / " + str(b)
 
 
