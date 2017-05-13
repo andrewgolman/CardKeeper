@@ -12,6 +12,7 @@ CHOOSE_PACK_ACTION = 2
 EDIT_PACK_NAME = 3
 EDIT_PACK_PRIVACY = 4
 DELETE_PACK = 5
+CHOOSE_CARD = 6
 
 
 _states = {}
@@ -37,8 +38,12 @@ def choose_pack(bot, update):
     state['pack_id'] = pack_id
     pack_info = queries.get_pack(pack_id)
 
+    if not queries.has_pack_read_access(pack_id, user(update)):
+        update.message.reply_text(say.access_denied)
+        return CHOSE_PACK
+
     markup = []
-    markup.append(['Review', 'Test'])
+    markup.append(['Do exercise', 'Show cards'])
     if pack_info['owner_id'] == user(update):
         markup.append(['Edit Name', 'Edit privacy', 'Delete pack'])
 
@@ -77,13 +82,25 @@ def choose_pack_action(bot, update):
         update.message.reply_text(say.pack_deletion_confirmation_prompt.format(pack_info['name']))
         return DELETE_PACK
 
-    if text == 'Review':
+    if text == 'Do exercise':
         update.message.reply_text(say.not_implemented)
         return CHOOSE_PACK_ACTION
 
-    if text == 'Test':
-        update.message.reply_text(say.not_implemented)
-        return CHOOSE_PACK_ACTION
+    if text == 'Show cards':
+        cards = queries.get_all_cards_in_pack(state['pack_id'])
+        cards_print = ['{}: {} - {} - {}'.format(x['card_id'], x['front'],
+                                                 x['back'], x['comment'])
+                       for x in cards]
+        markup = [['Add card(s)', 'Export as file']] + \
+                 [[x] for x in cards_print]
+        update.message.reply_text(
+            '\n'.join(cards_print),
+            reply_markup=ReplyKeyboardMarkup(markup, one_time_keyboard=True)
+        )
+        return CHOOSE_CARD
+
+    update.message.reply_text(say.not_recognized)
+    return CHOOSE_PACK_ACTION
 
 
 def edit_pack_name(bot, update):
@@ -129,4 +146,9 @@ def delete_pack(bot, update):
 
     queries.delete_pack(state['pack_id'])
     update.message.reply_text(say.pack_deleted)
+    return END
+
+
+def choose_card(bot, update):
+    update.message.reply_text(say.not_implemented)
     return END

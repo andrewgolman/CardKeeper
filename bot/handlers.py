@@ -126,6 +126,7 @@ conversation_handlers = [
             packs.edit.EDIT_PACK_NAME: [MessageHandler(Filters.text, packs.edit.edit_pack_name)],
             packs.edit.EDIT_PACK_PRIVACY: [MessageHandler(Filters.text, packs.edit.edit_pack_privacy)],
             packs.edit.DELETE_PACK: [MessageHandler(Filters.text, packs.edit.delete_pack)],
+            packs.edit.CHOOSE_CARD: [MessageHandler(Filters.text, packs.edit.choose_card)],
         },
         fallbacks=default_fallbacks()
     ),

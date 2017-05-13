@@ -39,6 +39,18 @@ def delete_pack(pack_id):
     base.commit()
 
 
+def get_all_cards_in_pack(pack_id):
+    cursor.execute('''
+        SELECT card_id, front, back, comment, type
+        FROM cards
+        WHERE pack_id = %s;
+    ''', (pack_id,))
+    return [{'card_id': card_id, 'front': front, 'back': back,
+             'comment': comment, 'type': tp}
+            for card_id, front, back, comment, tp
+            in cursor.fetchall()]
+
+
 def get_pack(pack_id):
     query = 'SELECT name, owner_id, privacy FROM packs WHERE pack_id = %s;'
     cursor.execute(query, (pack_id,))
@@ -49,6 +61,12 @@ def get_pack(pack_id):
         'owner_id': owner_id,
         'privacy': privacy
     }
+
+
+# TODO: Take permissions lists into account
+def has_pack_read_access(pack_id, user_id):
+    pack_info = get_pack(pack_id)
+    return user_id == pack_info['owner_id'] or pack_info['privacy'] == public
 
 
 def if_registered(user_id):
