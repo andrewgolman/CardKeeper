@@ -103,12 +103,13 @@ def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTI
 
 def select_cards(user_id, pack_id):
     print(user_id, pack_id)
-    query = """SELECT cards.card_id, cards.front, cards.back, cards.comment FROM cards, user_cards
+    query = """SELECT cards.card_id, cards.front, cards.back, cards.comment
+                FROM cards, user_cards
                 WHERE cards.card_id = user_cards.card_id
                 AND user_cards.status = %s
                 AND cards.pack_id = %s
                 AND user_cards.user_id = %s"""
-    cursor.execute(query, ('Active', pack_id, user_id))
+    cursor.execute(query, (CardStatusType.ACTIVE.value, pack_id, user_id))
     return cursor.fetchall()
 
 
