@@ -119,9 +119,9 @@ conversation_handlers = [
     ),
 
     ConversationHandler(
-        entry_points=[CommandHandler('packs', packs.edit.choose_pack)],
+        entry_points=[CommandHandler('packs', packs.edit.start)],
         states={
-            packs.edit.CHOOSE_PACK
+            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack)]
         },
         fallbacks=default_fallbacks()
     ),

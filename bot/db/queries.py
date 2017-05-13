@@ -21,6 +21,17 @@ def active_packs(user_id):
     return cursor.fetchall()
 
 
+def get_pack(pack_id):
+    query = 'SELECT name, owner_id, privacy FROM packs WHERE pack_id = %s;'
+    cursor.execute(query, (pack_id,))
+    name, owner_id, privacy = cursor.fetchone()
+    return {
+        'name': name,
+        'owner_id': owner_id,
+        'privacy': privacy
+    }
+
+
 def if_registered(user_id):
     query = "SELECT * FROM users WHERE users.user_id = %s;"
     cursor.execute(query, (user_id,))
