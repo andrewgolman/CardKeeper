@@ -1,8 +1,7 @@
-import io
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, File
 from telegram.ext import ConversationHandler
 import say
-from utils import user
+from utils import user, row_markup
 from db import queries
 from packs import packfile
 from db.enums import *
@@ -25,7 +24,7 @@ def start(bot, update):
 def choose_name(bot, update):
     state = _states[user(update)]
     state['name'] = update.message.text
-    update.message.reply_text(say.choose_pack_privacy, reply_markup=ReplyKeyboardMarkup([[x] for x in PrivacyType.values()], one_time_keyboard=True))
+    update.message.reply_text(say.choose_pack_privacy, reply_markup=row_markup(PrivacyType.value()))
     return CHOOSE_PRIVACY
 
 
