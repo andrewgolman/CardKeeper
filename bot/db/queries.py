@@ -14,11 +14,29 @@ def add_user(user):
     base.commit()
 
 
-def active_packs(user_id):
+def active_packs(user_id, start=0, count=10):
     query = """SELECT packs.pack_id, packs.name FROM user_packs, packs WHERE packs.pack_id = user_packs.pack_id
-                AND user_packs.status = %s AND user_id = %s ORDER BY pack_id;"""
-    cursor.execute(query, (CardStatusType.ACTIVE.value, user_id))
+                AND user_packs.status = %s AND user_id = %s ORDER BY pack_id
+                OFFSET %s LIMIT %s;"""
+    cursor.execute(query, (CardStatusType.ACTIVE.value, user_id, start, count))
     return cursor.fetchall()
+
+
+def delete_pack(pack_id):
+    owner_id = get_pack(pack_id)['owner_id']
+    cursor.execute(
+        'DELETE FROM cards WHERE pack_id = %s;',
+        (pack_id,)
+    )
+    cursor.execute(
+        'DELETE FROM user_packs WHERE pack_id = %s;',
+        (pack_id,)
+    )
+    cursor.execute(
+        'DELETE FROM packs WHERE pack_id = %s;',
+        (pack_id,)
+    )
+    base.commit()
 
 
 def get_pack(pack_id):
@@ -26,6 +44,7 @@ def get_pack(pack_id):
     cursor.execute(query, (pack_id,))
     name, owner_id, privacy = cursor.fetchone()
     return {
+        'pack_id': pack_id,
         'name': name,
         'owner_id': owner_id,
         'privacy': privacy
@@ -104,6 +123,20 @@ def update_card_status(user_id, card_id, status):
     query = """UPDATE user_cards SET status = %s
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query, (status, user_id, card_id))
+
+
+def update_pack_name(pack_id, new_name):
+    query = 'UPDATE packs SET name = %s WHERE pack_id = %s;'
+    cursor.execute(query, (new_name, pack_id))
+    base.commit()
+
+
+def update_pack_privacy(pack_id, new_privacy):
+    if isinstance(new_privacy, PrivacyType):
+        new_privacy = new_privacy.value
+
+    query = 'UPDATE packs SET privacy = %s WHERE pack_id = %s;'
+    cursor.execute(query, (new_privacy, pack_id))
 
 
 def update_pack_status(user_id, pack_id, status):

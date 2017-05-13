@@ -121,7 +121,11 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler('packs', packs.edit.start)],
         states={
-            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack)]
+            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack)],
+            packs.edit.CHOOSE_PACK_ACTION: [MessageHandler(Filters.text, packs.edit.choose_pack_action)],
+            packs.edit.EDIT_PACK_NAME: [MessageHandler(Filters.text, packs.edit.edit_pack_name)],
+            packs.edit.EDIT_PACK_PRIVACY: [MessageHandler(Filters.text, packs.edit.edit_pack_privacy)],
+            packs.edit.DELETE_PACK: [MessageHandler(Filters.text, packs.edit.delete_pack)],
         },
         fallbacks=default_fallbacks()
     ),
