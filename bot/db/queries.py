@@ -123,6 +123,7 @@ def update_card_status(user_id, card_id, status):
     query = """UPDATE user_cards SET status = %s
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query, (status, user_id, card_id))
+    base.commit()
 
 
 def update_pack_name(pack_id, new_name):
@@ -137,9 +138,11 @@ def update_pack_privacy(pack_id, new_privacy):
 
     query = 'UPDATE packs SET privacy = %s WHERE pack_id = %s;'
     cursor.execute(query, (new_privacy, pack_id))
+    base.commit()
 
 
 def update_pack_status(user_id, pack_id, status):
     query = """UPDATE user_cards SET status = %s
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query, (status, user_id, pack_id))
+    base.commit()
