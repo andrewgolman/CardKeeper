@@ -27,7 +27,7 @@ def accept_users(bot, update):
 
 
 def user_accepted(bot, update):
-    pass
+    pass s
 
 
 def invite(bot, update):
