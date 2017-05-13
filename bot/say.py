@@ -102,8 +102,8 @@ username_taken = "Oops. Our usernames are unique and this one seems to be taken.
 
 welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick registration procedure."
 
-GEN_GOAL_TYPE = [v.value for k, v in enums.GenGoalType.__members__.items()]
-NOTIFICATION_TYPE = [v.value for k, v in enums.NotificationType.__members__.items()]
+GEN_GOAL_TYPE = [enums.GenGoalType.values()]
+NOTIFICATION_TYPE = [enums.NotificationType.values()]
 
 
 def choose_language(card):
