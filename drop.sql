@@ -1,6 +1,5 @@
 DROP TABLE access_rights;
 DROP TABLE group_packs;
-DROP TABLE rights;
 DROP TABLE user_cards;
 DROP TABLE user_groups;
 DROP TABLE user_packs;

@@ -3,7 +3,7 @@ CREATE TYPE GEN_GOAL_TYPE AS ENUM ('Science', 'Speech', 'Belletristic');
 CREATE TYPE NOTIFICATION_TYPE AS ENUM ('Twice a day', 'Daily', 'Weekly', 'Never');
 CREATE TYPE PRIVACY_TYPE AS ENUM ('private', 'protected',  'public');
 CREATE TYPE CARD_STATUS_TYPE AS ENUM ('Active', 'Reserved', 'Not ready', 'Deprecated', 'Learned');
-CREATE TYPE RIGHTS_TYPE AS ENUM ('admin', 'user');
+CREATE TYPE RIGHTS_TYPE AS ENUM ('admin', 'user', 'invited', 'applied');
 CREATE TYPE INVITATION_TYPE AS ENUM ('from a group', 'from a user');
 CREATE TYPE CARD_TYPE AS ENUM ('Short', 'Construction', 'Sentence');
 
@@ -21,7 +21,7 @@ CREATE TABLE groups (
     group_id 	  SERIAL 		PRIMARY KEY,
     name 		    VARCHAR(50) 	NOT NULL UNIQUE,
     privacy 	  PRIVACY_TYPE 	NOT NULL,
-    founder 	  INTEGER 		REFERENCES users (user_id)
+    owner_id 	  INTEGER 		REFERENCES users (user_id)
 );
 
 CREATE TABLE packs (
@@ -38,12 +38,6 @@ CREATE TABLE cards (
     back 		  TEXT,
     comment     TEXT,
     type      CARD_TYPE
-);
-
-CREATE TABLE user_groups (
-    group_id 	INTEGER 	REFERENCES groups (group_id),
-    user_id 	INTEGER 	REFERENCES users (user_id),
-    PRIMARY KEY (group_id, user_id)
 );
 
 CREATE TABLE user_packs (
@@ -72,7 +66,7 @@ CREATE TABLE group_packs (
     PRIMARY KEY (group_id, pack_id)
 );
 
-CREATE TABLE rights ( -- editing (all packs) and access (private packs)
+CREATE TABLE user_groups ( -- editing (all packs) and access (private packs)
     group_id 	INTEGER 		REFERENCES groups (group_id),
     user_id	INTEGER 		REFERENCES users (user_id),
     rights 	RIGHTS_TYPE 	NOT NULL,
