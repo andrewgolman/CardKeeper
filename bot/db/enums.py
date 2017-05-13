@@ -9,6 +9,13 @@ class _SearchableEnum(Enum):
                 return v
         return None
 
+    @classmethod
+    def values(cls):
+        ans = []
+        for k, v in cls.__members__.items():
+            ans.append(v.value)
+        return ans
+
 
 class GenGoalType(_SearchableEnum):
     SCIENCE = 'Science'
