@@ -3,8 +3,7 @@ CREATE TYPE GEN_GOAL_TYPE AS ENUM ('Science', 'Speech', 'Belletristic');
 CREATE TYPE NOTIFICATION_TYPE AS ENUM ('Twice a day', 'Daily', 'Weekly', 'Never');
 CREATE TYPE PRIVACY_TYPE AS ENUM ('private', 'protected',  'public');
 CREATE TYPE CARD_STATUS_TYPE AS ENUM ('Active', 'Reserved', 'Not ready', 'Deprecated', 'Learned');
-CREATE TYPE RIGHTS_TYPE AS ENUM ('admin', 'user', 'invited', 'applied');
-CREATE TYPE INVITATION_TYPE AS ENUM ('from a group', 'from a user');
+CREATE TYPE RIGHTS_TYPE AS ENUM ('owner', 'admin', 'user', 'invited', 'applied');
 CREATE TYPE CARD_TYPE AS ENUM ('Short', 'Construction', 'Sentence');
 
 CREATE TABLE users (
