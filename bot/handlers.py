@@ -8,6 +8,7 @@ import learn
 import say
 import admin
 import groups
+import utils
 import packs.edit
 import packs.create
 from user_states import states
@@ -98,8 +99,8 @@ admin_handlers = [ConversationHandler(
 simple_handlers = [
     CommandHandler("menu", menu.head_menu),
     CommandHandler("begin", menu.begin),
-    CommandHandler("cards", menu.cards),
-    CommandHandler("menu", menu.admin),
+#    CommandHandler("cards", menu.cards),
+ #   CommandHandler("menu", menu.admin),
     CommandHandler("group_stats", menu.group_stats),
     CommandHandler("help", menu.help)
 
@@ -162,7 +163,7 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler("review", review.init_review)],
         states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+                utils.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
                 review.CHOOSE_REVIEW_TYPE: [MessageHandler(Filters.text, review.review_type_chosen)],
                 review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
                 review.ITERATE: [CommandHandler("change_language", review.change_language),
@@ -176,7 +177,7 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler("test", review.init_test)],
         states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+                utils.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
                 review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
                 review.ITERATE: [CommandHandler("change_language", review.change_language),
                                  MessageHandler(Filters.text, review.check)],
@@ -190,7 +191,7 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler("practice", review.init_practice)],
         states={
-                review.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
+                utils.CHOOSE_PACK: [MessageHandler(Filters.text, review.pack_chosen)],
                 review.CHOOSE_LANGUAGE: [MessageHandler(Filters.text, review.language_chosen)],
                 review.ITERATE: [#CommandHandler("change_language", review.change_language),
                                  MessageHandler(Filters.text, review.check)],
