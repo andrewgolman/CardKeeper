@@ -38,7 +38,8 @@ def unknown(bot, update):
 
 
 def cancel(bot, update):
-    update.message.reply_text('Cancelled current action')
+    update.message.reply_text('Cancelled current action',
+                              reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
 
@@ -121,7 +122,12 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler('packs', packs.edit.start)],
         states={
-            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack)]
+            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack)],
+            packs.edit.CHOOSE_PACK_ACTION: [MessageHandler(Filters.text, packs.edit.choose_pack_action)],
+            packs.edit.EDIT_PACK_NAME: [MessageHandler(Filters.text, packs.edit.edit_pack_name)],
+            packs.edit.EDIT_PACK_PRIVACY: [MessageHandler(Filters.text, packs.edit.edit_pack_privacy)],
+            packs.edit.DELETE_PACK: [MessageHandler(Filters.text, packs.edit.delete_pack)],
+            packs.edit.CHOOSE_CARD: [MessageHandler(Filters.text, packs.edit.choose_card)],
         },
         fallbacks=default_fallbacks()
     ),

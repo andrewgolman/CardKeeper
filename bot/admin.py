@@ -27,7 +27,7 @@ def accept_users(bot, update):
 
 
 def user_accepted(bot, update):
-    pass s
+    pass
 
 
 def invite(bot, update):
@@ -50,4 +50,3 @@ def admin_appointed(bot, update):
 
 def enter_nickname(bot, update):
     pass
-

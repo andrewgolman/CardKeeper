@@ -1,5 +1,7 @@
 from db import enums
 
+access_denied = 'Access denied'
+
 already_registered = "There is already an account for user with this TelegramID.\n"
 
 begin_legend = "Now choose one of the suggested modes. Find the instructions inside modes or use /help."
@@ -76,7 +78,19 @@ not_recognized = "Your message wasn't recognized by bot\n" + \
 
 pack_created = 'Pack {} successfully created'
 
+pack_deletion_confirmation = 'Yes, I want to delete pack {}'
+
+pack_deletion_confirmation_prompt = 'Do you really want to DELETE this pack?\n' + \
+    'If yes, repeat this letter by letter:\n' + pack_deletion_confirmation + '\n' + \
+    'Use /cancel or anything else to cancel'
+
+pack_info = 'Pack {}\nPrivacy: {}'
+
 pack_is_empty = "Oops, there are no cards in this pack. You can add some using /edit."
+
+pack_name_updated = 'Pack name was successfully changed'
+
+pack_privacy_updated = 'Pack privacy was sucessfully changed'
 
 registration_completed = "Congrats, you've completed the registration and are able to use all available functions."
 
@@ -90,9 +104,8 @@ username_taken = "Oops. Our usernames are unique and this one seems to be taken.
 
 welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick registration procedure."
 
-GEN_GOAL_TYPE = [v.value for k, v in enums.GenGoalType.__members__.items()]
-NOTIFICATION_TYPE = [v.value for k, v in enums.NotificationType.__members__.items()]
-# [v for k, v in enums.NotificationType.__members__.items()]
+GEN_GOAL_TYPE = [enums.GenGoalType.values()]
+NOTIFICATION_TYPE = [enums.NotificationType.values()]
 
 
 def choose_language(card):
