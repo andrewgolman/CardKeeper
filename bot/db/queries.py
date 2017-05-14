@@ -7,6 +7,13 @@ cursor = base.cursor()
 # Wrapped queries in alphabetic order
 
 
+def active_packs(user_id):
+    query = """SELECT packs.pack_id, packs.name FROM user_packs, packs WHERE packs.pack_id = user_packs.pack_id
+                AND user_packs.status = %s AND user_id = %s ORDER BY pack_id;"""
+    cursor.execute(query, (CardStatusType.ACTIVE.value, user_id))
+    return cursor.fetchall()
+
+
 def add_user(user):
     query = """INSERT INTO users (user_id, name, general_goal, weekly_goal, notifications_learn, notifications_stats, joined)
                 VALUES (%s, %s, %s, %s, %s, %s, current_date);"""
@@ -14,11 +21,13 @@ def add_user(user):
     base.commit()
 
 
-def active_packs(user_id):
-    query = """SELECT packs.pack_id, packs.name FROM user_packs, packs WHERE packs.pack_id = user_packs.pack_id
-                AND user_packs.status = %s AND user_id = %s ORDER BY pack_id;"""
-    cursor.execute(query, (CardStatusType.ACTIVE.value, user_id))
-    return cursor.fetchall()
+def available_groups(user_id, rights=RightsType.USER, include_higher=False):
+    query = """SELECT groups.group_id, groups.name FROM groups, user_groups
+            WHERE groups.group_id = user_groups.group_id
+            AND user_groups.user_id = %s
+            AND user_groups.rights """ + ("<" if include_higher else "") + "= %s;"""
+    cursor.execute(query, (user_id, rights))
+    return cursor.fetchall
 
 
 def get_pack(pack_id):
@@ -110,3 +119,9 @@ def update_pack_status(user_id, pack_id, status):
     query = """UPDATE user_cards SET status = %s
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query, (status, user_id, pack_id))
+
+
+def add_pack_to_group(group_id, pack_id, status):
+    query = "INSERT INTO group_packs (group_id, pack_id, status) VALUES (%s, %s, %s);"
+    cursor.execute(query, (group_id, pack_id, status))
+    base.commit()

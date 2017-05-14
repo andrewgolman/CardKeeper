@@ -47,6 +47,8 @@ class CardStatusType(_SearchableEnum):
 class RightsType(_SearchableEnum):
     ADMIN = 'admin'
     USER = 'user'
+    INVITED = 'invited'
+    APPLIED = 'applied'
 
 
 class InvitationType(_SearchableEnum):
