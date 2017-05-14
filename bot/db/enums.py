@@ -13,7 +13,7 @@ class _SearchableEnum(Enum):
     def values(cls):
         ans = []
         for k, v in cls.__members__.items():
-            ans.append(v.value)
+            ans.append(str(v.value))
         return ans
 
 
