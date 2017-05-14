@@ -24,7 +24,13 @@ def start(bot, update):
 def choose_name(bot, update):
     state = _states[user(update)]
     state['name'] = update.message.text
-    update.message.reply_text(say.choose_pack_privacy, reply_markup=row_markup(PrivacyType.value()))
+    update.message.reply_text(say.choose_pack_privacy, reply_markup=row_markup(PrivacyType.values())) # здесь упало при тестах
+# reply_markup=row_markup(PrivacyType.value()))
+# File
+# "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/enum.py", line
+# 324, in __getattr__
+# raise AttributeError(name) from None
+# AttributeError: value
     return CHOOSE_PRIVACY
 
 
@@ -56,7 +62,7 @@ def choose_pack_file(bot, update):
         name=state['name'],
         owner=user(update),
         privacy=state['privacy'],
-        cards=pack
+        cards=(pack if len(pack) < 100 else pack[:100])
     )
     update.message.reply_text(say.pack_created.format(pack_id))
     return END

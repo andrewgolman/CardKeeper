@@ -75,18 +75,12 @@ def get_pack(pack_id):
 # TODO: Take permissions lists into account
 def has_pack_read_access(pack_id, user_id):
     pack_info = get_pack(pack_id)
-    return user_id == pack_info['owner_id'] or pack_info['privacy'] == public
+    return user_id == pack_info['owner_id'] or pack_info['privacy'] == 'public'
 
 
 def if_registered(user_id):
     query = "SELECT * FROM users WHERE users.user_id = %s;"
     cursor.execute(query, (user_id,))
-    return True if len(cursor.fetchall()) else False
-
-
-def if_username_taken(username):
-    query = "SELECT * FROM users WHERE users.name = %s;"
-    cursor.execute(query, (username,))
     return True if len(cursor.fetchall()) else False
 
 
@@ -120,10 +114,20 @@ def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTI
     pack_id = cursor.fetchone()[0]
     cursor.execute(query, (owner, pack_id, status))
 
-    for front, back in cards:
-        query = "INSERT INTO cards (pack_id, front, back, type) VALUES (%s, %s, %s, %s);"
-        cursor.execute(query, (pack_id, front, back, CardType.SHORT.value))
+    insert_query = "INSERT INTO cards (pack_id, front, back, type) VALUES (%s, %s, %s, %s);"
+    insert2_query = "INSERT INTO user_cards (user_id, card_id, times_reviewed, correct_answers, status)" \
+                    "VALUES (%s, %s, 0, 0, 'Active');"
+    get_query = "SELECT card_id FROM cards WHERE pack_id = %s AND front = %s AND back = %s;"
 
+    #  TODO delete equal cards while processing the file
+    for front, back in cards:
+        try:
+            cursor.execute(insert_query, (pack_id, front, back, CardType.SHORT.value))
+            cursor.execute(get_query, (pack_id, front, back))
+            card_id = cursor.fetchone()[0]
+            cursor.execute(insert2_query, (owner, card_id))
+        except Exception:
+            pass
     base.commit()
     return pack_id
 
