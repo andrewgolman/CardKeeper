@@ -16,6 +16,11 @@ CREATE TABLE users (
     notifications_stats 	NOTIFICATION_TYPE
 );
 
+CREATE TABLE notifications (
+    user_id       INTEGER   PRIMARY KEY   REFERENCES users (user_id),
+    next          DATE
+);
+
 CREATE TABLE groups (
     group_id 	  SERIAL 		PRIMARY KEY,
     name 		    VARCHAR(50) 	NOT NULL UNIQUE,
