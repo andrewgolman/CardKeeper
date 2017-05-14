@@ -67,6 +67,8 @@ menu_legend = "You are in the main menu. Choose a command from below list to beg
 
 no_packs_available = "No packs to show. You can add some with /new or activate with /update."
 
+no_groups_available = "No groups to show."
+
 not_implemented = "Not implemented yet, stay tuned for updates."
 
 not_recognized = "Your message wasn't recognized by bot\n" + \
