@@ -33,6 +33,13 @@ def available_groups(user_id, rights=RightsType.USER, include_higher=False):
 
 def delete_pack(pack_id):
     owner_id = get_pack(pack_id)['owner_id']
+    cursor.execute('''
+        DELETE FROM user_cards
+        USING cards
+        WHERE
+            user_cards.card_id = cards.card_id AND
+            cards.pack_id = %s;
+    ''', (pack_id,))
     cursor.execute(
         'DELETE FROM cards WHERE pack_id = %s;',
         (pack_id,)

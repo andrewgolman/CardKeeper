@@ -81,10 +81,13 @@ not_recognized = "Your message wasn't recognized by bot\n" + \
 
 pack_created = 'Pack {} successfully created'
 
+pack_deleted = 'Pack {} successfully deleted'
+
 pack_deletion_confirmation = 'Yes, I want to delete pack {}'
 
 pack_deletion_confirmation_prompt = 'Do you really want to DELETE this pack?\n' + \
-    'If yes, repeat this letter by letter:\n' + pack_deletion_confirmation + '\n' + \
+    'It will be completely lost for you and any other users!\n' + \
+    'If yes, repeat this phrase letter by letter:\n' + pack_deletion_confirmation + '\n' + \
     'Use /cancel or anything else to cancel'
 
 pack_info = 'Pack {}\nPrivacy: {}'
