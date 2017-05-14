@@ -199,7 +199,10 @@ def change_language(bot, update):
 
 
 def review_quit(bot, update):
-    states.pop(user(update))
+    try:
+        states.pop(user(update))
+    except KeyError:
+        pass
     send(update, "Quitting...")
     menu.head_menu(bot, update)
     return ConversationHandler.END

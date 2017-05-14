@@ -5,8 +5,7 @@ import menu
 import register
 from modes import review, learn, modes
 import say
-import admin
-import groups
+from groups import admin, groups
 import utils
 import packs.edit
 import packs.create
@@ -60,29 +59,6 @@ def default_fallbacks(wrap=default_fallback_wrapper):
 
 unknown_message_handler = MessageHandler(None, unknown)
 
-
-admin_handlers = [ConversationHandler(
-                                      entry_points=[CommandHandler("add_pack", admin.choose_pack)],
-                                      states={admin.CHOOSE_PACK: MessageHandler(Filters.text, admin.pack_chosen)},
-                                      fallbacks=default_fallbacks()
-                                      ),
-                  CommandHandler("view_stats", admin.view_stats),
-                  ConversationHandler(
-                                      entry_points=[CommandHandler("appoint_admin", admin.enter_nickname)],
-                                      states={admin.ITERATE: MessageHandler(Filters.text, admin.admin_appointed)},
-                                      fallbacks=default_fallbacks()
-                                      ),
-                  ConversationHandler(
-                                      entry_points=[CommandHandler("accept_users", admin.accept_users)],
-                                      states={admin.ITERATE: MessageHandler(Filters.text, admin.user_accepted)},
-                                      fallbacks=default_fallbacks()
-                                      ),
-                  ConversationHandler(
-                                      entry_points=[CommandHandler("invite_users", admin.enter_nickname)],
-                                      states={admin.ITERATE: MessageHandler(Filters.text, admin.invited)},
-                                      fallbacks=default_fallbacks()
-                                      )
-                  ]
 
 # new_group_handler = ConversationHandler(
 #                         entry_points=[CommandHandler("new_group", groups.create)],
@@ -175,13 +151,24 @@ conversation_handlers = [
     # ConversationHandler(
     #     entry_points=[CommandHandler("admin", admin.start)],
     #     states={
-    #             admin.CHOOSE_GROUP: [MessageHandler(Filters.text, admin.group_chosen)],
-    #             admin.NEW_GROUP: [new_group_handler],
-    #             admin.MENU: admin_handlers,
+    #         admin.MENU: [
+    #             RegexHandler("^Edit packs$", admin.choose_pack),
+    #             RegexHandler("^Appoint admin$", admin.appoint_admin),
+    #             RegexHandler("^Accept users$", admin.accept_users),
+    #             RegexHandler("^Invite users$", admin.invite),
+    #             RegexHandler("^View stats$", admin.view_stats),
+    #             RegexHandler("^Edit group", admin.edit),
+    #         ],
+    #         admin.EDIT_PACKS: [],
+    #         admin.APPOINT: [],
+    #         admin.ACCEPT: [],
+    #         admin.INVITE: [],
+    #         admin.STATS: [],
+    #         admin.EDIT_GROUP: []
     #     },
-    #     fallbacks=default_fallbacks
+    #     fallbacks=default_fallbacks()
     # ),
-    #
+
     # ConversationHandler(
     #     entry_points=[CommandHandler("groups", groups.choose_groups)],
     #     states={

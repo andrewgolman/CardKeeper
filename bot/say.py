@@ -39,18 +39,21 @@ hello = "Hey, you're back! Time to make some progress, isn't it?"
 help = "/menu - head menu\n" \
        "/begin - choose exercise\n" \
        "/packs - edit your packs and cards\n" \
-       "/groups - edit or admin your groups\n" \
+       "/groups - see groups and import packs\n" \
+       "/admin - administrate groups\n" \
+       "" \
        "\n" \
+       "Modes: available after choosing a pack\n" \
        "/review mode. Go through the pack and remember cards\n" \
        "/test mode\n" \
        "/learn mode - see the cards all together\n" \
        "/quit mode\n" \
        " \n" \
-       "/new_pack - add new pack with some cards \n" \
+       "You can also \n" \
+       "ask for /help \n" \
+       "/cancel current action \n" \
        " \n" \
-       " \n" \
-       " \n" \
-       " \n" \
+#  "/stats - "
 
 
 incorrect_input = "Seems that you have enter something I hadn't expected. Please, read my previous" \
@@ -67,7 +70,7 @@ learning_mode_legend = "Enter a number of a card to see the other side. You can 
 
 menu_legend = "You are in the main menu. Choose a command from below list to begin."
 
-no_packs_available = "No packs to show. You can add some with /new or activate with /update."
+no_packs_available = "No packs to show. You can add some with /new_pack or activate with /update."
 
 no_groups_available = "No groups to show."
 
@@ -103,9 +106,6 @@ upload_pack_file = "Please send .pack file\nIt should contain cards as 'front si
 username_taken = "Oops. Our usernames are unique and this one seems to be taken. Please, try another one."
 
 welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick registration procedure."
-
-GEN_GOAL_TYPE = [enums.GenGoalType.values()]
-NOTIFICATION_TYPE = [enums.NotificationType.values()]
 
 
 def choose_language(card):

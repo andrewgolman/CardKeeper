@@ -2,7 +2,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import say
 from utils import send
-
+from db import enums
 
 def send_menu(update, ways, legend=""):
     opts = "\n".join(ways)
