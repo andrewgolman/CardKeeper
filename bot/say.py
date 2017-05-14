@@ -106,6 +106,8 @@ start_mode_learning = "start_mode_learning"
 
 upload_pack_file = "Please send .pack file\nIt should contain cards as 'front side' - 'back side'"
 
+use_begin = 'Please, use /begin to practice this pack'
+
 username_taken = "Oops. Our usernames are unique and this one seems to be taken. Please, try another one."
 
 welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick registration procedure."

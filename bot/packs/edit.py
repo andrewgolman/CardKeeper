@@ -78,8 +78,11 @@ def choose_pack_action_h(bot, update):
         return delete_pack(bot, update)
 
     if text == 'Do exercise':
+        # TODO: Save selected pack id for /menu handler
         update.message.reply_text(say.not_implemented)
-        return CHOOSE_PACK_ACTION
+
+        update.message.reply_text(say.use_begin)
+        return END
 
     if text == 'Show cards':
         return choose_card(bot, update)
