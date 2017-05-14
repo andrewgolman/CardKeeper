@@ -6,6 +6,7 @@ class InvalidPack(Exception):
 
 def load(f):
     with f:
+        was = set()
         ans = []
         i = 1
         for ln in f:
@@ -13,9 +14,14 @@ def load(f):
                 ln = ln.replace('- ', ':')
                 ln = ln.replace('\t', ':')
 
-                tokens = ln.split(':')
+                tokens = list(ln.split(':'))
+                if len(tokens) == 1:
+                    tokens.append(None)
                 if len(tokens) != 2:
                     raise InvalidPack(i)
+                if tuple(tokens) in was:
+                    raise InvalidPack(i)
+                was.add(tuple(tokens))
                 ans.append(tuple(map(lambda x: x.strip(), tokens)))
             i += 1
         return ans
