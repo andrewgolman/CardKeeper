@@ -3,15 +3,20 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 import say
 from utils import send
 
+
+def send_menu(update, ways, legend=""):
+    opts = "\n".join(ways)
+    update.message.reply_text(legend + '\n' + opts)
+
+
 def head_menu(bot, update):
     ways = ["/begin", "/packs", "/groups", "/settings"]
-    legend = say.menu_legend
-    menu_opts = "\n".join(ways)
-    update.message.reply_text(legend + '\n' + menu_opts)
+    send_menu(update, ways, say.menu_legend)
 
 
 def help(bot, update):
     send(update, say.help)
+
 
 def quit(bot, update):
     pass
@@ -23,17 +28,21 @@ def end(bot, update):
 
 def begin(bot, update):
     ways = ["/review", "/learn", "/test", "/practice"]
-    legend = say.begin_legend
-    opts = "\n".join(ways)
-    update.message.reply_text(legend + '\n' + opts)
+    send_menu(update, ways, say.begin_legend)
 
 
-def cards(bot, update):
-    pass
+def groups(bot, update):
+    ways = ["/user", "/admin"]
+    send_menu(update, ways)
 
 
-def admin(bot, update):
-    pass
+def group_user(bot, update):
+    send(update, say.not_implemented)
+
+
+def admin_menu(bot, update):
+    ways = ["/add_pack", "/update_status", "/view_stats", "/invite_users", "/accept_users", "/appoint_admin"]
+    send_menu(update, ways)
 
 
 def group_stats(bot, update):
