@@ -4,9 +4,9 @@ access_denied = 'Access denied'
 
 already_registered = "There is already an account for user with this TelegramID.\n"
 
-begin_legend = "Now choose one of the suggested modes. Find the instructions inside modes or use /help."
+begin_legend = "Now choose one of the suggested modes."
 
-completed = "You can completed an exercise. If you've done it well - congrats:)"
+completed = "You have completed an exercise. If you've done it well - congrats:)"
 
 choose_a_pack = "Choose a pack from a list below. Enter a number of a pack."
 

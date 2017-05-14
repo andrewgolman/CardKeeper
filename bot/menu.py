@@ -10,25 +10,16 @@ def send_menu(update, ways, legend=""):
 
 
 def head_menu(bot, update):
-    ways = ["/begin", "/packs", "/groups", "/settings"]
+    ways = ["/begin - start an exercise",
+            "/packs - add or edit packs",
+            "/groups - get tasks from groups",
+            "/admin - create or manage a group"
+            "/settings"]
     send_menu(update, ways, say.menu_legend)
 
 
 def help(bot, update):
     send(update, say.help)
-
-
-def quit(bot, update):
-    pass
-
-
-def end(bot, update):
-    pass
-
-
-def begin(bot, update):
-    ways = ["/review", "/learn", "/test", "/practice"]
-    send_menu(update, ways, say.begin_legend)
 
 
 def groups(bot, update):

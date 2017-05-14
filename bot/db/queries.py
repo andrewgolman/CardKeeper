@@ -28,7 +28,7 @@ def available_groups(user_id, rights=RightsType.USER, include_higher=False):
             AND user_groups.user_id = %s
             AND user_groups.rights """ + ("<" if include_higher else "") + "= %s;"""
     cursor.execute(query, (user_id, rights))
-    return cursor.fetchall
+    return cursor.fetchall()
 
 
 def delete_pack(pack_id):
