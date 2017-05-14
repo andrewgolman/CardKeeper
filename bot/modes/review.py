@@ -3,13 +3,13 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from db import queries
 import say
 import menu
-from utils import send, user, choose_pack
+from modes import modes
+from modes.modes import choose_pack
+from utils import send, user
 import utils
 from random import shuffle
 from user_states import states
-
-CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, QUIT, ITERATE, END = \
-    tuple(range(utils.inf_const, utils.inf_const+5))
+from modes.modes import ConversationStates
 
 
 class ReviewTypes:
@@ -28,17 +28,14 @@ start_markup = ["Start!"]
 
 
 class ReviewState:
-    def __init__(self, type):
-        self.cards = []
+    def __init__(self, type, cards):
+        self.cards = cards
         self.right_answers = []
         self.wrong_answers = []
         self.type = type
         self.language = 0
         self.first_go = True
         self.last_card = None
-
-    def get_cards(self, cards):
-        self.cards = cards
 
     def move(self, update):
         self.cards = self.wrong_answers
@@ -98,35 +95,23 @@ class ReviewState:
 
 
 def init_review(bot, update):
-    states[user(update)] = ReviewState(ReviewTypes.TRUST)
-    return choose_pack(bot, update)
+    states[user(update)] = ReviewState(ReviewTypes.TRUST, states[user(update)])
+    return choose_review_type(bot, update)
 
 
 def init_test(bot, update):
-    states[user(update)] = ReviewState(ReviewTypes.TEST)
-    return choose_pack(bot, update)
+    states[user(update)] = ReviewState(ReviewTypes.TEST, states[user(update)])
+    return choose_language(bot, update)
 
 
 def init_practice(bot, update):
-    states[user(update)] = ReviewState(ReviewTypes.PRACTICE)
-    return choose_pack(bot, update)
-
-
-def pack_chosen(bot, update):
-    pack_id = utils.get_pack_id(update)
-    if not pack_id:
-        return choose_pack(bot, update)
-    cards = queries.select_cards(user(update), pack_id)
-    if not cards:
-        send(update, say.pack_is_empty)
-        return choose_pack(bot, update)
-    states[user(update)].get_cards(cards)
-    return choose_review_type(bot, update) if states[user(update)].type == ReviewTypes.TRUST else choose_language(bot, update)
+    states[user(update)] = ReviewState(ReviewTypes.PRACTICE, states[user(update)])
+    return choose_language(bot, update)
 
 
 def choose_review_type(bot, update):
     send(update, say.choose_type_of_review, markup=review_types_markup)
-    return CHOOSE_REVIEW_TYPE
+    return ConversationStates.CHOOSE_REVIEW_TYPE
 
 
 def review_type_chosen(bot, update):
@@ -139,7 +124,7 @@ def review_type_chosen(bot, update):
 
 def choose_language(bot, update):
     send(update, say.choose_language(states[user(update)].cards[0]), markup=languages)
-    return CHOOSE_LANGUAGE
+    return ConversationStates.CHOOSE_LANGUAGE
 
 
 def language_chosen(bot, update):
@@ -165,7 +150,7 @@ def ask(bot, update, special_markup=None):
 
     if states[user(update)].type != ReviewTypes.TRUST:
         states[user(update)].store()
-    return ITERATE
+    return ConversationStates.ITERATE
 
 
 def check(bot, update):
@@ -202,7 +187,7 @@ def end(bot, update):
     if not states[user(update)].wrong_answers:
         send(update, say.completed)
         review_quit(bot, update)
-        return QUIT
+        return ConversationStates.QUIT
     send(update, say.inter_results(states[user(update)]))
     states[user(update)].move(update)
     return ask(bot, update)
