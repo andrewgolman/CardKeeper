@@ -95,12 +95,12 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler('packs', packs.edit.start)],
         states={
-            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack)],
-            packs.edit.CHOOSE_PACK_ACTION: [MessageHandler(Filters.text, packs.edit.choose_pack_action)],
-            packs.edit.EDIT_PACK_NAME: [MessageHandler(Filters.text, packs.edit.edit_pack_name)],
-            packs.edit.EDIT_PACK_PRIVACY: [MessageHandler(Filters.text, packs.edit.edit_pack_privacy)],
-            packs.edit.DELETE_PACK: [MessageHandler(Filters.text, packs.edit.delete_pack)],
-            packs.edit.CHOOSE_CARD: [MessageHandler(Filters.text, packs.edit.choose_card)],
+            packs.edit.CHOOSE_PACK: [MessageHandler(Filters.text, packs.edit.choose_pack_h)],
+            packs.edit.CHOOSE_PACK_ACTION: [MessageHandler(Filters.text, packs.edit.choose_pack_action_h)],
+            packs.edit.EDIT_PACK_NAME: [MessageHandler(Filters.text, packs.edit.edit_pack_name_h)],
+            packs.edit.EDIT_PACK_PRIVACY: [MessageHandler(Filters.text, packs.edit.edit_pack_privacy_h)],
+            packs.edit.DELETE_PACK: [MessageHandler(Filters.text, packs.edit.delete_pack_h)],
+            packs.edit.CHOOSE_CARD: [MessageHandler(Filters.text, packs.edit.choose_card_h)],
         },
         fallbacks=default_fallbacks()
     ),
@@ -108,9 +108,9 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler('new_pack', packs.create.start)],
         states={
-            packs.create.CHOOSE_NAME: [MessageHandler(Filters.text, packs.create.choose_name)],
-            packs.create.CHOOSE_PRIVACY: [MessageHandler(Filters.text, packs.create.choose_privacy)],
-            packs.create.CHOOSE_PACK_FILE: [MessageHandler(Filters.document, packs.create.choose_pack_file)]
+            packs.create.CHOOSE_NAME: [MessageHandler(Filters.text, packs.create.choose_name_h)],
+            packs.create.CHOOSE_PRIVACY: [MessageHandler(Filters.text, packs.create.choose_privacy_h)],
+            packs.create.CHOOSE_PACK_FILE: [MessageHandler(Filters.document, packs.create.choose_pack_file_h)]
         },
         fallbacks=default_fallbacks()
     ),

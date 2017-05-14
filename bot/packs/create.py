@@ -17,24 +17,26 @@ _states = {}
 
 def start(bot, update):
     _states[user(update)] = {}
+    return choose_name(bot, update)
+
+
+def choose_name(bot, update):
     update.message.reply_text(say.choose_pack_name)
     return CHOOSE_NAME
 
 
-def choose_name(bot, update):
+def choose_name_h(bot, update):
     state = _states[user(update)]
     state['name'] = update.message.text
-    update.message.reply_text(say.choose_pack_privacy, reply_markup=row_markup(PrivacyType.values())) # здесь упало при тестах
-# reply_markup=row_markup(PrivacyType.value()))
-# File
-# "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/enum.py", line
-# 324, in __getattr__
-# raise AttributeError(name) from None
-# AttributeError: value
-    return CHOOSE_PRIVACY
+    return choose_privacy(bot, update)
 
 
 def choose_privacy(bot, update):
+    update.message.reply_text(say.choose_pack_privacy, reply_markup=row_markup(PrivacyType.values()))
+    return CHOOSE_PRIVACY
+
+
+def choose_privacy_h(bot, update):
     state = _states[user(update)]
     text = update.message.text
 
@@ -43,11 +45,15 @@ def choose_privacy(bot, update):
         return CHOOSE_PRIVACY
 
     state['privacy'] = text
+    return choose_pack_file(bot, update)
+
+
+def choose_pack_file(bot, update):
     update.message.reply_text(say.upload_pack_file)
     return CHOOSE_PACK_FILE
 
 
-def choose_pack_file(bot, update):
+def choose_pack_file_h(bot, update):
     state = _states[user(update)]
     file_id = update.message.document.file_id
     # Doesn't support pipe :(
