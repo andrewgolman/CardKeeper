@@ -1,6 +1,6 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from db import queries
+from db import queries, enums
 import say
 import menu
 from utils import send, user
@@ -24,14 +24,14 @@ def start(bot, update):
 
 
 def general_goal(update):
-    send(update, say.choose_general_goal, markup=say.GEN_GOAL_TYPE)
+    send(update, say.choose_general_goal, markup=enums.GenGoalType.values())
     return GENERAL_GOAL
 
 
 def general_goal_handle(bot, update):
     res = update.message.text
-    if res not in say.GEN_GOAL_TYPE:
-        send(update, say.incorrect_input + say.choose_general_goal, markup=say.GEN_GOAL_TYPE)
+    if res not in enums.GenGoalType.values():
+        send(update, say.incorrect_input + say.choose_general_goal, markup=enums.GenGoalType.values())
         return GENERAL_GOAL
     states[user(update)].append(res)
     return weekly_goal(update)
@@ -55,28 +55,28 @@ def weekly_goal_handle(bot, update):
 
 
 def notify_learn(update):
-    send(update, say.choose_learn_notifications, markup=say.NOTIFICATION_TYPE)
+    send(update, say.choose_learn_notifications, markup=enums.NotificationType.values())
     return NOTIFY_LEARN
 
 
 def notify_learn_handle(bot, update):
     res = update.message.text
-    if res not in say.NOTIFICATION_TYPE:
-        send(update, say.incorrect_input + say.choose_learn_notifications, markup=say.NOTIFICATION_TYPE)
+    if res not in enums.NotificationType.values():
+        send(update, say.incorrect_input + say.choose_learn_notifications, markup=enums.NotificationType.values())
         return NOTIFY_LEARN
     states[user(update)].append(res)
     return notify_stats(update)
 
 
 def notify_stats(update):
-    send(update, say.choose_stats_notifications, markup=say.NOTIFICATION_TYPE)
+    send(update, say.choose_stats_notifications, markup=enums.NotificationType.values())
     return NOTIFY_STATS
 
 
 def notify_stats_handle(bot, update):
     res = update.message.text
-    if res not in say.NOTIFICATION_TYPE:
-        send(update, say.incorrect_input + say.choose_general_goal, markup=say.NOTIFICATION_TYPE)
+    if res not in enums.NotificationType.values():
+        send(update, say.incorrect_input + say.choose_general_goal, markup=enums.NotificationType.values())
         return NOTIFY_STATS
     states[user(update)].append(res)
     send(update, say.registration_completed)
