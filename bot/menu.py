@@ -13,7 +13,7 @@ def head_menu(bot, update):
     ways = ["/begin - start an exercise",
             "/packs - add or edit packs",
             "/groups - get tasks from groups",
-            "/admin - create or manage a group"
+            "/admin - create or manage a group",
             "/settings"]
     send_menu(update, ways, say.menu_legend)
 
