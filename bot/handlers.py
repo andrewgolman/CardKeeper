@@ -38,7 +38,8 @@ def unknown(bot, update):
 
 
 def cancel(bot, update):
-    update.message.reply_text('Cancelled current action')
+    update.message.reply_text('Cancelled current action',
+                              reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
 
