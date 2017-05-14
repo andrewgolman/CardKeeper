@@ -58,11 +58,13 @@ def choose_pack_file(bot, update):
     except packfile.InvalidPack as e:
         update.message.reply_text(say.invalid_pack.format(e.line))
         return CHOOSE_PACK_FILE
+    pack = pack if len(pack) < 100 else pack[:100]
+    pack = list(set(pack))
     pack_id = queries.new_pack(
         name=state['name'],
         owner=user(update),
         privacy=state['privacy'],
-        cards=(pack if len(pack) < 100 else pack[:100])
+        cards=pack
     )
     update.message.reply_text(say.pack_created.format(pack_id))
     return END
