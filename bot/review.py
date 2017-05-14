@@ -3,11 +3,13 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from db import queries
 import say
 import menu
-from utils import send, user
+from utils import send, user, choose_pack
+import utils
 from random import shuffle
 from user_states import states
 
-CHOOSE_PACK, CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, QUIT, ITERATE, END = tuple(range(6))
+CHOOSE_REVIEW_TYPE, CHOOSE_LANGUAGE, QUIT, ITERATE, END = \
+    tuple(range(utils.inf_const, utils.inf_const+5))
 
 
 class ReviewTypes:
@@ -15,7 +17,6 @@ class ReviewTypes:
     ENTER = "Enter"
     TEST = "Test"
     PRACTICE = "Practice"
-
 
 review_types_markup = [ReviewTypes.TRUST, ReviewTypes.ENTER]
 
@@ -111,20 +112,9 @@ def init_practice(bot, update):
     return choose_pack(bot, update)
 
 
-def choose_pack(bot, update):
-    packs = queries.active_packs(user(update))
-    if not packs:
-        send(update, say.no_packs_available)
-        return QUIT
-    send(update, say.enumerated(packs))
-    return CHOOSE_PACK
-
-
 def pack_chosen(bot, update):
-    try:
-        pack_id = queries.active_packs(update.message.from_user.id)[int(update.message.text) - 1][0]
-    except (TypeError, IndexError, ValueError):
-        send(update, say.incorrect_input)
+    pack_id = utils.get_pack_id(update)
+    if not pack_id:
         return choose_pack(bot, update)
     cards = queries.select_cards(user(update), pack_id)
     if not cards:

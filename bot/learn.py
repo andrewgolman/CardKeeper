@@ -4,6 +4,7 @@ from db import queries
 import say
 from random import shuffle
 from utils import send, user
+import utils
 from user_states import states
 
 # Handles all updates within learn mode and ConversationHandler learn_ch
@@ -24,7 +25,7 @@ from user_states import states
 # )
 
 
-CHOOSE_PACK, LEARN = (0, 1)
+CHOOSE_PACK, LEARN = tuple(range(utils.inf_const, utils.inf_const+2))
 ALL = -1
 
 
