@@ -4,6 +4,7 @@ import say
 from utils import user, row_markup
 from db import queries
 from db.enums import *
+from menu import head_menu
 
 END = ConversationHandler.END
 START = 0
@@ -23,6 +24,11 @@ def start(bot, update):
     _states[user(update)] = {}
     return choose_pack(bot, update)
 
+
+def end(bot, update):
+    _states[user(update)] = None
+    head_menu(bot, update)
+    return END
 
 def choose_pack(bot, update):
     packs = map(lambda x: str(x[0]) + ': ' + x[1], queries.active_packs(user(update)))
@@ -82,7 +88,7 @@ def choose_pack_action_h(bot, update):
         update.message.reply_text(say.not_implemented)
 
         update.message.reply_text(say.use_begin)
-        return END
+        return end(bot, update)
 
     if text == 'Show cards':
         return choose_card(bot, update)
@@ -106,10 +112,10 @@ def edit_pack_name_h(bot, update):
     pack_info = queries.get_pack(state['pack_id'])
     if pack_info['owner_id'] != user(update):
         update.message.reply_text(say.access_denied)
-        return END
+        return choose_pack_action(bot, update)
     queries.update_pack_name(state['pack_id'], update.message.text)
     update.message.reply_text(say.pack_name_updated)
-    return END
+    return choose_pack_action(bot, update)
 
 
 def edit_pack_privacy(bot, update):
@@ -129,14 +135,14 @@ def edit_pack_privacy_h(bot, update):
 
     if pack_info['owner_id'] != user(update):
         update.message.reply_text(say.access_denied)
-        return END
+        return choose_pack_action(bot, update)
     if not PrivacyType.has(text):
         update.message.reply_text('Wrong privacy type')
-        return EDIT_PACK_PRIVACY
+        return edit_pack_privacy(bot, update)
 
     queries.update_pack_privacy(state['pack_id'], text)
     update.message.reply_text(say.pack_privacy_updated)
-    return END
+    return end(bot, update)
 
 
 def delete_pack(bot, update):
@@ -144,7 +150,7 @@ def delete_pack(bot, update):
     pack_info = queries.get_pack(state['pack_id'])
     if pack_info['owner_id'] != user(update):
         update.message.reply_text(say.access_denied)
-        return CHOOSE_PACK_ACTION
+        return choose_pack_action(bot, update)
     update.message.reply_text(say.pack_deletion_confirmation_prompt.format(pack_info['name']))
     return DELETE_PACK
 
@@ -155,14 +161,14 @@ def delete_pack_h(bot, update):
 
     if pack_info['owner_id'] != user(update):
         update.message.reply_text(say.access_denied)
-        return END
+        return choose_pack_action(bot, update)
     if update.message.text != say.pack_deletion_confirmation.format(pack_info['name']):
         update.message.reply_text('Cancelled deletion')
-        return END
+        return choose_pack_action(bot, update)
 
     queries.delete_pack(state['pack_id'])
     update.message.reply_text(say.pack_deleted)
-    return END
+    return choose_pack(bot, update)
 
 
 def choose_card(bot, update):
@@ -182,4 +188,4 @@ def choose_card(bot, update):
 
 def choose_card_h(bot, update):
     update.message.reply_text(say.not_implemented)
-    return END
+    return choose_pack_action(bot, update)
