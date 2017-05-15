@@ -22,7 +22,11 @@ choose_pack = "List of your active packs. Choose one to show or edit."
 
 choose_pack_name = "Choose name for a new pack."
 
-choose_pack_privacy = "Choose pack privacy level: private or public"
+choose_pack_privacy = "Choose pack privacy level: it can be " + \
+    ', '.join(enums.PrivacyType.values())
+
+choose_pack_status = 'Choose pack status: it can be ' + \
+    ', '.join(enums.CardStatusType.values())
 
 choose_stats_notifications = "I can also tell you how much you've learned to give you some extra" \
                              "motivation. Now you can choose a way to get this kind of messages."
@@ -90,13 +94,15 @@ pack_deletion_confirmation_prompt = 'Do you really want to DELETE this pack?\n' 
     'If yes, repeat this phrase letter by letter:\n' + pack_deletion_confirmation + '\n' + \
     'Use /cancel or anything else to cancel'
 
-pack_info = 'Pack {}\nPrivacy: {}'
+pack_info = "Pack {}\nPrivacy: {}\nStatus: {}"
 
 pack_is_empty = "Oops, there are no cards in this pack. You can add some using /edit."
 
 pack_name_updated = 'Pack name was successfully changed'
 
-pack_privacy_updated = 'Pack privacy was sucessfully changed'
+pack_privacy_updated = 'Pack privacy was successfully changed'
+
+pack_status_updated = 'Pack status was successfully changed'
 
 registration_completed = "Congrats, you've completed the registration and are able to use all available functions."
 

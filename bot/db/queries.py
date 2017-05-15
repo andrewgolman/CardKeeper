@@ -67,15 +67,25 @@ def get_all_cards_in_pack(pack_id):
             in cursor.fetchall()]
 
 
-def get_pack(pack_id):
-    query = 'SELECT name, owner_id, privacy FROM packs WHERE pack_id = %s;'
-    cursor.execute(query, (pack_id,))
+def get_pack(pack_id, user_id=None):
+    cursor.execute(
+        'SELECT name, owner_id, privacy FROM packs WHERE pack_id = %s;',
+        (pack_id,)
+    )
     name, owner_id, privacy = cursor.fetchone()
+    status = None
+    if user_id is not None:
+        cursor.execute('''
+            SELECT status FROM user_packs
+            WHERE user_id = %s AND pack_id = %s;
+        ''', (user_id, pack_id))
+        status = cursor.fetchone()[0]
     return {
         'pack_id': pack_id,
         'name': name,
         'owner_id': owner_id,
-        'privacy': privacy
+        'privacy': privacy,
+        'status': status
     }
 
 

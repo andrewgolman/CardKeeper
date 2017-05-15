@@ -57,19 +57,19 @@ def choose_pack_h(bot, update):
 def choose_pack_action(bot, update):
     state = _states[user(update)]
     pack_id = state['pack_id']
-    pack_info = queries.get_pack(pack_id)
+    pack_info = queries.get_pack(pack_id, user(update))
 
     if not queries.has_pack_read_access(pack_id, user(update)):
         update.message.reply_text(say.access_denied)
         return CHOOSE_PACK
 
     markup = []
-    markup.append(['Do exercise', 'Show cards'])
+    markup.append(['Do exercise', 'Show cards', 'Edit pack status'])
     if pack_info['owner_id'] == user(update):
-        markup.append(['Edit Name', 'Edit privacy', 'Delete pack'])
+        markup.append(['Edit name', 'Edit privacy', 'Delete pack'])
 
     update.message.reply_text(
-        say.pack_info.format(pack_info['name'], pack_info['privacy']),
+        say.pack_info.format(pack_info['name'], pack_info['privacy'], pack_info['status']),
         reply_markup=ReplyKeyboardMarkup(markup, one_time_keyboard=True)
     )
 
@@ -80,11 +80,14 @@ def choose_pack_action_h(bot, update):
     state = _states[user(update)]
     text = update.message.text
 
-    if text == 'Edit Name':
+    if text == 'Edit name':
         return edit_pack_name(bot, update)
 
     if text == 'Edit privacy':
         return edit_pack_privacy(bot, update)
+
+    if text == 'Edit pack status':
+        return edit_pack_status(bot, update)
 
     if text == 'Delete pack':
         return delete_pack(bot, update)
@@ -154,9 +157,6 @@ def edit_pack_privacy_h(bot, update):
 def edit_pack_status(bot, update):
     state = _states[user(update)]
     pack_info = queries.get_pack(state['pack_id'])
-    if pack_info['owner_id'] != user(update):
-        update.message.reply_text(say.access_denied)
-        return choose_pack_action(bot, update)
     update.message.reply_text(
         say.choose_pack_status,
         reply_markup=row_markup(CardStatusType.values())
@@ -168,15 +168,10 @@ def edit_pack_status_h(bot, update):
     state = _states[user(update)]
     pack_info = queries.get_pack(state['pack_id'])
     text = update.message.text
-
-    if pack_info['owner_id'] != user(update):
-        update.message.reply_text(say.access_denied)
-        return choose_pack_action(bot, update)
     if not CardStatusType.has(text):
         update.message.reply_text('Wrong privacy type')
         return edit_pack_status(bot, update)
-
-    queries.update_pack_status(state['pack_id'], text)
+    queries.update_pack_status(user(update), state['pack_id'], text)
     update.message.reply_text(say.pack_status_updated)
     return end(bot, update)
 
