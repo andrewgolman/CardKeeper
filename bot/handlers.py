@@ -99,8 +99,13 @@ conversation_handlers = [
             packs.edit.CHOOSE_PACK_ACTION: [MessageHandler(Filters.text, packs.edit.choose_pack_action_h)],
             packs.edit.EDIT_PACK_NAME: [MessageHandler(Filters.text, packs.edit.edit_pack_name_h)],
             packs.edit.EDIT_PACK_PRIVACY: [MessageHandler(Filters.text, packs.edit.edit_pack_privacy_h)],
+            packs.edit.EDIT_PACK_STATUS: [MessageHandler(Filters.text, packs.edit.edit_pack_status_h)],
             packs.edit.DELETE_PACK: [MessageHandler(Filters.text, packs.edit.delete_pack_h)],
             packs.edit.CHOOSE_CARD: [MessageHandler(Filters.text, packs.edit.choose_card_h)],
+            # packs.edit.CHOOSE_CARD_ACTION: [MessageHandler(Filters.text, packs.edit.choose_card_action_h)],
+            # packs.edit.EDIT_CARD_FRONT: [MessageHandler(Filters.text, packs.edit.edit_card_front_h)],
+            # packs.edit.EDIT_CARD_BACK: [MessageHandler(Filters.text, packs.edit.edit_card_back_h)],
+            # packs.edit.EDIT_CARD_STATUS: [MessageHandler(Filters.text, packs.edit.edit_card_status_h)],
         },
         fallbacks=default_fallbacks()
     ),

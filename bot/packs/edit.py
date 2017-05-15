@@ -12,8 +12,13 @@ CHOOSE_PACK = 1
 CHOOSE_PACK_ACTION = 2
 EDIT_PACK_NAME = 3
 EDIT_PACK_PRIVACY = 4
+EDIT_PACK_STATUS = 11
 DELETE_PACK = 5
 CHOOSE_CARD = 6
+CHOOSE_CARD_ACTION = 7
+EDIT_CARD_FRONT = 8
+EDIT_CARD_BACK = 9
+EDIT_CARD_STATUS = 10
 
 
 _states = {}
@@ -29,6 +34,7 @@ def end(bot, update):
     _states[user(update)] = None
     head_menu(bot, update)
     return END
+
 
 def choose_pack(bot, update):
     packs = map(lambda x: str(x[0]) + ': ' + x[1], queries.active_packs(user(update)))
@@ -142,6 +148,36 @@ def edit_pack_privacy_h(bot, update):
 
     queries.update_pack_privacy(state['pack_id'], text)
     update.message.reply_text(say.pack_privacy_updated)
+    return end(bot, update)
+
+
+def edit_pack_status(bot, update):
+    state = _states[user(update)]
+    pack_info = queries.get_pack(state['pack_id'])
+    if pack_info['owner_id'] != user(update):
+        update.message.reply_text(say.access_denied)
+        return choose_pack_action(bot, update)
+    update.message.reply_text(
+        say.choose_pack_status,
+        reply_markup=row_markup(CardStatusType.values())
+    )
+    return EDIT_PACK_STATUS
+
+
+def edit_pack_status_h(bot, update):
+    state = _states[user(update)]
+    pack_info = queries.get_pack(state['pack_id'])
+    text = update.message.text
+
+    if pack_info['owner_id'] != user(update):
+        update.message.reply_text(say.access_denied)
+        return choose_pack_action(bot, update)
+    if not CardStatusType.has(text):
+        update.message.reply_text('Wrong privacy type')
+        return edit_pack_status(bot, update)
+
+    queries.update_pack_status(state['pack_id'], text)
+    update.message.reply_text(say.pack_status_updated)
     return end(bot, update)
 
 
