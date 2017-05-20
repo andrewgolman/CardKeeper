@@ -65,7 +65,6 @@ def choose_pack_file_h(bot, update):
         update.message.reply_text(say.invalid_pack.format(e.line))
         return CHOOSE_PACK_FILE
     pack = pack if len(pack) < 100 else pack[:100]
-    pack = list(set(pack))
     pack_id = queries.new_pack(
         name=state['name'],
         owner=user(update),

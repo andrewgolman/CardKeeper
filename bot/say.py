@@ -110,7 +110,10 @@ right = "OK."
 
 start_mode_learning = "start_mode_learning"
 
-upload_pack_file = "Please send .pack file\nIt should contain cards as 'front side' - 'back side'"
+upload_pack_file = "Please send .cards file\n" \
+    "It should contain cards as 'front side' - 'back side' - 'comment'\n" \
+    "Last two parts are optional" \
+    "File encoding must be UTF-8"
 
 use_begin = 'Please, use /begin to practice this pack'
 
