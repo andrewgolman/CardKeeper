@@ -115,6 +115,11 @@ def new_card(front, back):
     base.commit()
 
 
+def new_group(name, owner, privacy=PrivacyType.PUBLIC):
+    query = "INSERT INTO groups (name, privacy, owner_id) VALUES (%s, %s, %s);"
+    cursor.execute(query, (name, privacy, owner))
+    base.commit()
+
 def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTIVE, cards=[]):
     if isinstance(privacy, PrivacyType):
         privacy = privacy.value
