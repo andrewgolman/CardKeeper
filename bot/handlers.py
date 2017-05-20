@@ -9,6 +9,7 @@ from groups import admin, groups
 import utils
 import packs.edit
 import packs.create
+import packs.add
 from user_states import states
 from utils import user
 
@@ -116,6 +117,14 @@ conversation_handlers = [
             packs.create.CHOOSE_NAME: [MessageHandler(Filters.text, packs.create.choose_name_h)],
             packs.create.CHOOSE_PRIVACY: [MessageHandler(Filters.text, packs.create.choose_privacy_h)],
             packs.create.CHOOSE_PACK_FILE: [MessageHandler(Filters.document, packs.create.choose_pack_file_h)]
+        },
+        fallbacks=default_fallbacks()
+    ),
+
+    ConversationHandler(
+        entry_points=[CommandHandler('add_pack', packs.add.start)],
+        states={
+            packs.add.CHOOSE_PACK: [MessageHandler(Filters.text, packs.add.choose_pack)],
         },
         fallbacks=default_fallbacks()
     ),

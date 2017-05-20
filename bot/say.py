@@ -18,7 +18,7 @@ choose_learn_notifications = "I can remind you to look through your cards if you
 
 choose_mode = "Please, choose one of suggested modes. You can type /modes_help to find out more about them."
 
-choose_pack = "List of your active packs. Choose one to show or edit."
+choose_pack = "Here is the list of your active packs. Choose one to show or edit. You can also create a /new_pack or /add_pack from our repository."
 
 choose_pack_name = "Choose name for a new pack."
 
@@ -84,6 +84,8 @@ not_implemented = "Not implemented yet, stay tuned for updates."
 
 not_recognized = "Your message wasn't recognized by bot\n" + \
     "Use /help for list of all commands"
+
+pack_added = "Pack successfully added"
 
 pack_created = 'Pack {} successfully created'
 
