@@ -17,12 +17,16 @@ def load(f):
                 tokens = list(ln.split(':'))
                 if len(tokens) == 1:
                     tokens.append(None)
-                if len(tokens) != 2:
+                if len(tokens) == 2:
+                    tokens.append(None)
+                if len(tokens) != 3:
                     raise InvalidPack(i)
                 if tuple(tokens) in was:
-                    raise InvalidPack(i)
+                    continue  # Ignoring this card
                 was.add(tuple(tokens))
-                ans.append(tuple(map(lambda x: x.strip(), tokens)))
+                front, back, comment = \
+                    map(lambda x: x.strip() if x is not None else None, tokens)
+                ans.append({'front': front, 'back': back, 'comment': comment})
             i += 1
         return ans
 
@@ -30,6 +34,10 @@ def load(f):
 def save(f, pack):
     with f:
         f.write('# Learning_Cards Pack v0.1\n\n')
-        for front, back in pack:
-            f.write(front + ' - ' + back + '\n')
+        for card in pack:
+            # TODO: None handling
+            front = card['front']
+            back = card['back']
+            comment = card['comment']
+            f.write('{} - {} - {}\n'.format(front, back, comment))
         f.close()
