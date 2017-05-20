@@ -27,9 +27,17 @@ trust_markup = ["Right", "Wrong", "/change_language"]
 start_markup = ["Start!"]
 
 
+class Card:
+    def __init__(self, c):
+        self.side = c[1:3]
+        self.id = c[0]
+
+
 class ReviewState:
     def __init__(self, type, cards):
-        self.cards = cards
+        self.cards = []
+        for c in cards:
+            self.cards.append(Card(c))
         self.right_answers = []
         self.wrong_answers = []
         self.type = type
@@ -42,17 +50,17 @@ class ReviewState:
         self.wrong_answers = []
         if self.first_go and self.type != ReviewTypes.PRACTICE:
             for i in self.right_answers:
-                queries.update_card_data(user(update), i[0], 1)
+                queries.update_card_data(user(update), i.id, 1)
         for i in self.wrong_answers:
-            queries.update_card_data(user(update), i[0], 0)
+            queries.update_card_data(user(update), i.id, 0)
         self.first_go = False
         self.shuffle()
 
     def ask(self):
-        return self.next()[2 if self.language else 1]
+        return self.next().side[self.language]
 
     def answer(self):
-        return (self.last_card or self.next())[1 if self.language else 2]
+        return "Answer: " + (self.last_card or self.next()).side[not self.language]
 
     def right(self, update, printing=False):
         if printing:
@@ -74,16 +82,16 @@ class ReviewState:
         self.cards.pop(0)
 
     def compare(self, s):
-        answer = self.last_card[1 if self.language else 2]
+        answer = self.last_card.side[not self.language]
         if s == answer:
             return None
         return answer
 
     def test_markup(self):
-        answers = [self.next()[1 if self.language else 2]]
+        answers = [self.next().side[not self.language]]
         for i in (self.cards + self.right_answers + self.wrong_answers):
             if i != self.next():
-                answers.append(i[1 if self.language else 2])
+                answers.append(i.side[not self.language])
         shuffle(answers[1:])
         answers = answers[:3]
         shuffle(answers)
@@ -188,7 +196,7 @@ def end(bot, update):
         send(update, say.completed)
         review_quit(bot, update)
         return ConversationStates.QUIT
-    send(update, say.inter_results(states[user(update)]))
+    send(update, say.inter_results(len(states[user(update)].right_answers), len(states[user(update)].wrong_answers)))
     states[user(update)].move(update)
     return ask(bot, update)
 
@@ -203,6 +211,6 @@ def review_quit(bot, update):
         states.pop(user(update))
     except KeyError:
         pass
-    send(update, "Quitting...")
+    # send(update, "Quitting...")
     menu.head_menu(bot, update)
     return ConversationHandler.END

@@ -31,7 +31,9 @@ choose_pack_status = 'Choose pack status: it can be ' + \
 choose_stats_notifications = "I can also tell you how much you've learned to give you some extra" \
                              "motivation. Now you can choose a way to get this kind of messages."
 
-choose_type_of_review = "Choose type of review. Type /review_help for help."
+choose_type_of_review = "Choose type of review.\n" \
+    "Trust - you will just tell me whether your last (mental) answer was right.\n" \
+    "Enter - I'll ask you to type all the answers. No misprints!"
 
 choose_username = "Our system will remember you by your TelegramID and nickname. First of all, choose the latter!"
 
@@ -120,19 +122,20 @@ welcome = "Welcome to CardKeeper bot! ... Before you start, please, pass a quick
 
 
 def choose_language(card):
-    res = "choose_language"
-    return str(res) + "\n" + "front - as " + card[1] + "\n" + "back - as " + card[2]
+    res = "Now choose language in which I'm going to ask you. I can't recognize languages yet, so let's count on an example."
+    return str(res) + "\n" + "Front - as " + card.side[0] + "\n" + "Back - as " + card.side[1]
 
 
 def enumerated(items):
-    res = ""
+    res = "Enter a number of a chosen option. \n"
     for i in enumerate(items):
         res = res + str(i[0] + 1) + ". " + i[1][1] + "\n"
     return res
 
 
 def inter_results(a, b=None):
-    return str(a) + " / " + str(b)
+    s = "Your answer accuracy: \n"
+    return s + str(a) + " / " + str(a+b)
 
 
 def wrong(ans):
