@@ -116,6 +116,8 @@ def new_card(front, back):
 
 
 def new_group(name, owner, privacy=PrivacyType.PUBLIC):
+    if isinstance(privacy, PrivacyType):
+        privacy = privacy.value
     query = "INSERT INTO groups (name, privacy, owner_id) VALUES (%s, %s, %s);"
     cursor.execute(query, (name, privacy, owner))
     base.commit()
