@@ -136,7 +136,7 @@ def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTI
     query = "INSERT INTO user_packs (user_id, pack_id, status) VALUES (%s, %s, %s);"
     cursor.execute(query, (owner, pack_id, status))
 
-    insert_query = "INSERT INTO cards (pack_id, front, back, comment, type) VALUES (%s, %s, %s, %s, %s);"
+    insert_query = "INSERT INTO cards (pack_id, front, back, comment, type) VALUES (%s, %s, %s, %s, %s) RETURNING card_id;"
     insert2_query = "INSERT INTO user_cards (user_id, card_id, times_reviewed, correct_answers, status)" \
                     "VALUES (%s, %s, 0, 0, 'Active');"
 
@@ -145,7 +145,6 @@ def new_pack(name, owner, privacy=PrivacyType.PUBLIC, status=CardStatusType.ACTI
         back = card['back']
         comment = card['comment']
         cursor.execute(insert_query, (pack_id, front, back, comment, CardType.SHORT.value))
-        cursor.execute('SELECT lastval()')
         card_id = cursor.fetchone()[0]
         cursor.execute(insert2_query, (owner, card_id))
     base.commit()
