@@ -2,6 +2,8 @@ from db import enums
 
 access_denied = 'Access denied'
 
+already_added = "You already have this pack in your list."
+
 already_registered = "There is already an account for user with this TelegramID.\n"
 
 begin_legend = "Now choose one of the suggested modes."

@@ -15,11 +15,33 @@ def active_packs(user_id, start=0, count=10):
     return cursor.fetchall()
 
 
+def add_pack(user_id, pack_id):
+    query = """INSERT INTO user_packs (pack_id, user_id, status) VALUES (%s, %s, 'Active');"""
+    cursor.execute(query, (pack_id, user_id))
+
+    query = """SELECT card_id FROM cards WHERE cards.pack_id = %s"""
+    cursor.execute(query, (pack_id,))
+    cards = cursor.fetchall()
+
+    for i in cards:
+        query = """INSERT INTO user_cards (user_id, card_id, times_reviewed, correct_answers, status) VALUES (%s, %s, 0, 0, 'Active');"""
+        cursor.execute(query, (user_id, i[0]))
+
+    base.commit()
+
+
 def add_user(user):
     query = """INSERT INTO users (user_id, name, general_goal, weekly_goal, notifications_learn, notifications_stats, joined)
                 VALUES (%s, %s, %s, %s, %s, %s, current_date);"""
     cursor.execute(query, tuple(user))
     base.commit()
+
+
+def available_packs(user_id):
+    query = """SELECT packs.pack_id, packs.name FROM packs
+                WHERE packs.privacy = 'public' LIMIT 105;"""
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 def available_groups(user_id, rights=RightsType.USER, include_higher=False):
@@ -89,6 +111,12 @@ def get_pack(pack_id, user_id=None):
     }
 
 
+def if_added(user_id, pack_id):
+    query = "SELECT * FROM user_packs WHERE user_id = %s AND pack_id = %s;"
+    cursor.execute(query, (user_id, pack_id))
+    return list(cursor.fetchall())
+
+
 # TODO: Take permissions lists into account
 def has_pack_read_access(pack_id, user_id):
     pack_info = get_pack(pack_id)
@@ -115,7 +143,7 @@ def new_card(front, back):
     base.commit()
 
 
-def new_group(name, owner, privacy=PrivacyType.PUBLIC):
+def new_group(name, owner, privacy="public"):
     query = "INSERT INTO groups (name, privacy, owner_id) VALUES (%s, %s, %s);"
     cursor.execute(query, (name, privacy, owner))
     base.commit()

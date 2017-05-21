@@ -124,7 +124,7 @@ conversation_handlers = [
     ConversationHandler(
         entry_points=[CommandHandler('add_pack', packs.add.start)],
         states={
-            packs.add.CHOOSE_PACK: [MessageHandler(Filters.text, packs.add.choose_pack)],
+            packs.add.CHOOSE_PACK: [MessageHandler(Filters.text, packs.add.choose_pack_h)],
         },
         fallbacks=default_fallbacks()
     ),
