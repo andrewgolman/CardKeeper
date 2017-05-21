@@ -225,3 +225,4 @@ def update_pack_status(user_id, pack_id, status):
                 WHERE user_id = %s AND card_id = %s"""
     cursor.execute(query, (status, user_id, pack_id))
     base.commit()
+
